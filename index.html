@@ -709,3 +709,44 @@ const openFromHash = ()=>{ const h = (location.hash||"").slice(1);
   if (SOLO){ SOLO = false; document.body.classList.remove("solo"); } if (h && units.some(u=>u.id===h) && !(DT && DT.u.id===h)) openDetail(h); else if (!h && DT) hideDetail(); };
 openFromHash(); window.addEventListener("hashchange", openFromHash);
 </script>
+<script>
+/* Google Analytics (chỉ chạy trên bnbvin.com). Không gửi tên, số điện thoại hay nội dung tin nhắn. */
+(function(){
+  if (!/(^|\.)bnbvin\.com$/.test(location.hostname)) return;
+  var GA = "G-BRRHC0PP7R";
+  var s = document.createElement("script"); s.async = true; s.src = "https://www.googletagmanager.com/gtag/js?id=" + GA; document.head.appendChild(s);
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function(){ dataLayer.push(arguments); };
+  gtag("js", new Date());
+  var standalone = (window.matchMedia && matchMedia("(display-mode: standalone)").matches) || navigator.standalone === true;
+  gtag("config", GA, { app_mode: standalone ? "app" : "web", site_lang: (typeof LANG!=="undefined"?LANG:"") });
+  var ev = function(n,p){ try { gtag("event", n, p||{}); } catch(e){} };
+  var info = function(u){ return u ? { unit: u.c || u.id, zone: u.z || "", unit_type: u.t || "" } : {}; };
+  var cur = function(){ try { return (typeof DT!=="undefined" && DT && DT.u) ? DT.u : null; } catch(e){ return null; } };
+  try { if (cur()) ev("view_unit", Object.assign(info(cur()), { via: "link" })); } catch(e){}
+  if (typeof window.openDetail === "function"){ var od = window.openDetail; window.openDetail = function(id){ var r = od.apply(this, arguments); var u = cur(); if (u) ev("view_unit", Object.assign(info(u), { via: "page" })); return r; }; }
+  if (typeof window.openLB === "function"){ var ol = window.openLB; window.openLB = function(u,i){ ev("view_photos", info(u)); return ol.apply(this, arguments); }; }
+  if (typeof window.setTab === "function"){ var st = window.setTab; window.setTab = function(t){ ev("switch_tab", { tab: t }); return st.apply(this, arguments); }; }
+  document.addEventListener("click", function(e){
+    var t = e.target;
+    var b = t.closest && t.closest(".zbtn,.wabtn,.wcbtn");
+    if (b){
+      var ch = b.classList.contains("wabtn") ? "whatsapp" : b.classList.contains("wcbtn") ? "wechat" : "zalo";
+      var row = b.closest(".zrow"), adv = row && row.querySelector("b") ? row.querySelector("b").textContent.trim() : "";
+      var m = b.getAttribute("data-zmsg") || "";
+      var ctx = { dtMsg: "unit", msg: "selected_units", svcMsg: "service", hpMsg: "help" }[m] || m;
+      var p = { method: ch, advisor: adv, context: ctx };
+      try {
+        if (ctx === "service") p.service = Array.from(SV.pick).join(",");
+        else if (ctx === "unit" && cur()) Object.assign(p, info(cur()));
+        else if (ctx === "selected_units") { var L = units.filter(function(u){ return picked.has(u.id); }); p.unit_count = L.length; p.unit = L.map(function(u){ return u.c || u.id; }).join(", ").slice(0, 100); }
+      } catch(_){}
+      ev("contact_click", p); return;
+    }
+    if (t.closest("#sGo")){ var g = function(id){ var x = document.getElementById(id); return x ? x.value : ""; }; ev("search_stay", { zone: g("fZoneSel") || "all", bedrooms: g("fBedSel") || "all", check_in: g("fIn"), check_out: g("fOut") }); return; }
+    var sv = t.closest("[data-svc]"); if (sv){ ev("select_service", { service: sv.getAttribute("data-svc") }); return; }
+    var lg = t.closest("[data-lang]"); if (lg){ ev("change_language", { language: lg.getAttribute("data-lang") }); return; }
+    var mi = t.closest("#umMenu a, #umMenu button"); if (mi){ ev("menu_click", { item: mi.hasAttribute("data-help") ? "help" : (mi.getAttribute("href")||"").indexOf("zalo")>=0 ? "consign" : "admin" }); return; }
+  }, true);
+})();
+</script>
