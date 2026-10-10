@@ -15,47 +15,542 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://bnbvin.com/og.jpg">
-<meta name="theme-color" content="#0f3d3e">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f3d3e'/%3E%3Cpath d='M14 34 32 18l18 16v14H14z' fill='%23f2c879'/%3E%3C/svg%3E">
-<noscript><meta http-equiv="refresh" content="2;url=https://claude.ai/artifact/JtA9EjWrWVzA4mRQyhAENr"></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231E6A4E'/%3E%3Cpath d='M14 34 32 18l18 16v14H14z' fill='%23F2C879'/%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Lexend:wght@500;600;700&display=swap">
 <style>
-  :root{--ink:#fff;--teal:#0f3d3e;--gold:#f2c879}
-  *{box-sizing:border-box;margin:0}
-  html,body{height:100%}
-  body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;color:var(--ink);background:var(--teal)}
-  .hero{min-height:100%;display:flex;align-items:flex-end;padding:24px 20px 40px;
-    background:linear-gradient(180deg,rgba(15,61,62,.15) 0%,rgba(15,61,62,.55) 55%,rgba(15,61,62,.95) 100%),url(hero.jpg) center/cover no-repeat}
-  .box{max-width:560px;margin:0 auto;width:100%}
-  .brand{font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:700}
-  h1{font-size:clamp(28px,7vw,44px);line-height:1.12;margin:10px 0 12px;font-weight:800}
-  p{font-size:16px;line-height:1.5;opacity:.92}
-  .tags{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 22px}
-  .tags span{font-size:13px;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25)}
-  a.btn{display:block;text-align:center;text-decoration:none;font-weight:700;font-size:17px;color:var(--teal);background:var(--gold);padding:16px 20px;border-radius:14px}
-  .note{margin-top:12px;font-size:13px;opacity:.75;text-align:center}
-  .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--gold);margin:0 2px;animation:b 1s infinite alternate}
-  .dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
-  @keyframes b{to{opacity:.2}}
+/* Layout: catalogue wall — filter rail on top, photo-first cards in an auto grid, selection tray docked at the bottom */
+:root{
+  --bg:#F2F5F1; --card:#FFFFFF; --ink:#14251E; --ink2:#55645D; --line:#DCE3DD;
+  --park:#1E6A4E; --park-soft:#E1EFE7; --sun:#C8891A; --sun-soft:#FBF0D9; --busy:#9AA59F;
+  --f-display:"Lexend","Be Vietnam Pro",system-ui,sans-serif;
+  --f-body:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F1915; --card:#16231D; --ink:#E6EEE9; --ink2:#9FB0A7; --line:#27372F;
+  --park:#5CC497; --park-soft:#1C3329; --sun:#E7B04D; --sun-soft:#33281A; --busy:#6C7A73; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1915; --card:#16231D; --ink:#E6EEE9; --ink2:#9FB0A7; --line:#27372F;
+  --park:#5CC497; --park-soft:#1C3329; --sun:#E7B04D; --sun-soft:#33281A; --busy:#6C7A73; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--f-body);margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:16px;padding-block:20px 120px}
+h1{font:700 clamp(26px,5vw,40px)/1.1 var(--f-display);margin:0;letter-spacing:-.01em;text-wrap:balance}
+.lede{color:var(--ink2);margin:6px 0 0;max-width:62ch}
+.stats{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:12px;font-variant-numeric:tabular-nums}
+.stats b{font:600 20px var(--f-display);color:var(--park)}
+.stats span{color:var(--ink2);font-size:13px}
+.filters{background:var(--bg);padding-block:12px;margin-top:14px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
+.frow{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.lbl{font-size:12px;font-weight:600;color:var(--ink2);text-transform:uppercase;letter-spacing:.06em;margin-right:4px}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 12px;font:500 13.5px var(--f-body);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--park);border-color:var(--park);color:var(--bg)}
+.chip:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--sun);outline-offset:2px}
+input,select{font:14px var(--f-body);color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:7px 10px;min-width:0}
+input[type=search]{flex:1 1 180px;max-width:280px}
+@media (min-width:760px){.filters{position:sticky;top:env(safe-area-inset-top,0px);z-index:5}}
+.result{color:var(--ink2);font-size:13px;margin:12px 2px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.card.sel{border-color:var(--park);box-shadow:0 0 0 2px var(--park)}
+.pic{position:relative;aspect-ratio:4/3;max-width:100%;background:var(--park-soft);cursor:zoom-in}
+.pic img{width:100%;height:100%;object-fit:cover;display:block}
+.nopic{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--park);cursor:default}
+.nopic b{font:600 22px var(--f-display)}
+.nopic span{font-size:12.5px;color:var(--ink2)}
+.cnt{position:absolute;right:10px;bottom:10px;background:rgba(10,20,16,.68);color:#fff;font-size:12px;padding:3px 9px;border-radius:999px}
+.st{position:absolute;left:10px;top:10px;font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px}
+.st.free{background:var(--park);color:var(--bg)}
+.st.busy{background:var(--sun-soft);color:var(--sun)}
+.body{padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px;flex:1}
+.top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.code{font:600 17px var(--f-display);letter-spacing:.01em}
+.type{font-size:12.5px;font-weight:600;color:var(--park);background:var(--park-soft);padding:2px 8px;border-radius:6px;white-space:nowrap}
+.zone{color:var(--ink2);font-size:13px}
+.prices{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px;font-variant-numeric:tabular-nums}
+.prices div{border:1px solid var(--line);border-radius:10px;padding:6px 10px}
+.prices b{display:block;font:600 16px var(--f-display)}
+.prices span{font-size:12px;color:var(--ink2)}
+.strip{display:flex;gap:4px;margin-top:2px}
+.strip img{width:46px;height:46px;object-fit:cover;border-radius:7px;cursor:zoom-in}
+.pick{margin-top:auto;padding-top:6px}
+.pick button{width:100%;border:1px solid var(--park);background:transparent;color:var(--park);border-radius:10px;padding:9px;font:600 14px var(--f-body);cursor:pointer}
+.pick .more{border-color:var(--line);color:var(--ink)}
+.card.sel .pick button[data-p]{background:var(--park);color:var(--bg)}
+.empty{grid-column:1/-1;text-align:center;color:var(--ink2);padding:40px 0}
+.tray{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--ink);color:var(--bg);padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap}
+.tray b{font-family:var(--f-display)}
+.tray button{border:0;background:var(--park);color:var(--bg);border-radius:10px;padding:10px 16px;font:600 14px var(--f-body);cursor:pointer}
+.tray .ghost{background:transparent;color:var(--bg);text-decoration:underline;padding:10px 6px}
+.sheet-bg{position:fixed;inset:0;background:rgba(5,12,9,.55);z-index:30;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--card);color:var(--ink);width:100%;max-width:560px;border-radius:18px 18px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px));max-height:88vh;overflow:auto}
+@media (min-width:700px){.sheet-bg{align-items:center}.sheet{border-radius:18px}}
+.sheet h2{font:600 20px var(--f-display);margin:0 0 6px}
+.sheet textarea{width:100%;min-height:200px;font:14px/1.5 var(--f-body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px}
+.steps{margin:10px 0;padding-left:20px;color:var(--ink2)}
+.phone{font:600 20px var(--f-display);color:var(--park);user-select:all}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.btn{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:10px 14px;font:600 14px var(--f-body);cursor:pointer;text-decoration:none;display:inline-block}
+.btn.pri{background:var(--park);border-color:var(--park);color:var(--bg)}
+.dt-bg{position:fixed;inset:0;background:rgba(5,12,9,.6);z-index:25;display:flex;justify-content:center;align-items:flex-end}
+@media (min-width:760px){.dt-bg{align-items:center;padding:24px}}
+.dt{background:var(--bg);color:var(--ink);width:100%;max-width:760px;max-height:94vh;overflow:auto;border-radius:18px 18px 0 0}
+@media (min-width:760px){.dt{border-radius:18px}}
+.dt-hero{position:relative;aspect-ratio:16/10;max-width:100%;background:var(--park-soft);cursor:zoom-in}
+.dt-hero img{width:100%;height:100%;object-fit:cover;display:block}
+.dt-back{position:absolute;left:12px;top:12px;display:inline-flex;align-items:center;gap:6px;background:var(--card);color:var(--ink);border:0;border-radius:999px;padding:9px 14px 9px 10px;font:600 14.5px var(--f-body);cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.25)}
+.dt-back svg{width:18px;height:18px}
+.dt-bar{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:8px;background:var(--bg);border-bottom:1px solid var(--line);padding:10px 12px}
+.dt-bar button{flex:none;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:8px 14px 8px 10px;font:600 14.5px var(--f-body);cursor:pointer}
+.dt-bar b{font:600 15px var(--f-display);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.dt-hero .st{top:auto;bottom:10px}
+.dt-thumbs{display:flex;gap:6px;overflow-x:auto;padding:8px 16px 0}
+.dt-thumbs img{width:64px;height:64px;object-fit:cover;border-radius:8px;cursor:pointer;flex:none;opacity:.75}
+.dt-thumbs img.on{opacity:1;outline:2px solid var(--park)}
+.dt-body{padding:14px 16px 20px;display:flex;flex-direction:column;gap:14px}
+.dt-h{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap}
+.dt-h h2{font:700 24px var(--f-display);margin:0}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px}
+.facts div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.facts span{display:block;font-size:12px;color:var(--ink2)}
+.facts b{font:600 15px var(--f-display);font-variant-numeric:tabular-nums}
+.dt h3{font:600 13px var(--f-body);text-transform:uppercase;letter-spacing:.06em;color:var(--ink2);margin:0 0 6px}
+.dt p{margin:0;max-width:65ch}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tags span{background:var(--park-soft);color:var(--park);border-radius:999px;padding:4px 10px;font-size:13px;font-weight:500}
+.cal{display:flex;flex-wrap:wrap;gap:4px}
+.cal i{font-style:normal;width:40px;text-align:center;border-radius:8px;padding:4px 0;font-size:12px;line-height:1.2;font-variant-numeric:tabular-nums}
+.cal i.f{background:var(--park-soft);color:var(--park)}
+.cal i.b{background:var(--line);color:var(--busy);text-decoration:line-through}
+.dt-cta{background:var(--card);border-top:1px solid var(--line);padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.dt-cta .phone{font-size:16px}
+.zl{display:flex;flex-direction:column;gap:6px;margin-bottom:6px}
+.zrow{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:8px 10px}
+.zrow b{font:600 15px var(--f-display)}
+.zph{font-size:13px;color:var(--ink2);font-variant-numeric:tabular-nums}
+.ztag{font-size:11.5px;font-weight:600;color:var(--park);background:var(--park-soft);border-radius:999px;padding:1px 8px;margin-left:4px}
+.zbtn{white-space:nowrap;padding:9px 14px}
+.zacts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.zacts .btn{padding:9px 12px}
+.wabtn{background:#1FA855!important;border-color:#1FA855!important;color:#fff!important}
+.wcbtn{background:#07C160!important;border-color:#07C160!important;color:#fff!important}
+.lb{position:fixed;inset:0;background:#000;z-index:40;display:flex;flex-direction:column}
+.lb img{flex:1;min-height:0;object-fit:contain;width:100%}
+.lbbar{display:flex;justify-content:space-between;align-items:center;color:#fff;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px))}
+.lbbar button{background:rgba(255,255,255,.14);color:#fff;border:0;border-radius:999px;padding:9px 16px;font:600 15px var(--f-body);cursor:pointer}
+body.solo .wrap,body.solo .tray{display:none!important}
+body.solo .dt-bg{background:var(--bg);display:block;padding:0}
+body.solo .dt{max-height:none;height:100%;border-radius:0;margin:0 auto}
+body.solo .solo-hide{display:none!important}
+.hdtop{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.hdtop h1{flex:1;min-width:0}
+.langsw{flex:none}
+.dt-bar .langsw{margin-left:auto}
+.lgw{position:relative}
+.lgbtn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:7px 10px 7px 10px;font:600 13.5px var(--f-body);cursor:pointer;white-space:nowrap}
+.dt-bar .lgbtn{padding:6px 9px;font-size:13px}
+.lgbtn svg{width:17px;height:17px;flex:none;color:var(--park)}
+.lgbtn .chev{width:15px;height:15px;color:var(--ink2);transition:transform .15s}
+.lgbtn[aria-expanded="true"] .chev{transform:rotate(180deg)}
+.lgmenu{position:absolute;right:0;top:calc(100% + 6px);z-index:60;min-width:190px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:6px;box-shadow:0 12px 32px rgba(0,0,0,.16);display:flex;flex-direction:column}
+.lghd{font-size:11.5px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--ink2);padding:6px 10px 4px}
+.lgmenu button{display:flex;justify-content:space-between;align-items:center;gap:10px;border:0;background:transparent;color:var(--ink);text-align:left;padding:9px 10px;border-radius:9px;font:500 14.5px var(--f-body);cursor:pointer}
+.lgmenu button:hover{background:var(--park-soft)}
+.lgmenu button[aria-selected="true"]{font-weight:700;color:var(--park)}
+.lgmenu button svg{width:16px;height:16px}
+.foot{margin-top:28px;color:var(--ink2);font-size:13px;text-align:center}
+@media (prefers-reduced-motion:no-preference){.card{transition:box-shadow .15s,border-color .15s}}
 </style>
-</head>
-<body>
-<main class="hero">
-  <div class="box">
-    <div class="brand">BnB Vin</div>
-    <h1>Căn hộ cho thuê Vinhomes Grand Park</h1>
-    <p>Căn hộ đầy đủ nội thất, vào ở ngay. Xem ảnh, giá và lịch trống cập nhật mỗi ngày.</p>
-    <div class="tags"><span>Thuê ngày</span><span>Thuê tháng</span><span>Thuê năm</span><span>EN · 中文 · 한국어 · 日本語 · RU</span></div>
-    <a class="btn" id="go" href="https://claude.ai/artifact/JtA9EjWrWVzA4mRQyhAENr">Xem quỹ căn →</a>
-    <div class="note">Đang mở quỹ căn <span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+
+<div class="wrap">
+  <header>
+    <div class="hdtop"><h1 data-t="title">Quỹ căn Vinhomes Grand Park</h1><div class="langsw" id="langTop"></div></div>
+    <p class="lede" data-t="lede">Căn hộ cho thuê ngắn ngày và theo tháng tại Thủ Đức. Lọc theo phân khu, số phòng ngủ, giá và ngày ở, bấm ảnh để xem cả bộ, chọn những căn bạn thích rồi gửi qua Zalo để được báo trống và hẹn xem nhà.</p>
+    <div class="stats" id="stats"></div>
+  </header>
+
+  <div class="filters" role="search">
+    <div class="frow"><span class="lbl" data-t="zoneL">Phân khu</span><span class="frow" id="fZone"></span></div>
+    <div class="frow"><span class="lbl" data-t="bedL">Phòng ngủ</span><span class="frow" id="fBed"></span></div>
+    <div class="frow">
+      <span class="lbl" data-t="priceL">Giá</span>
+      <select id="fUnit" data-ta="priceBy" aria-label="Tính giá theo"><option value="night" data-t="byNight">Theo đêm</option><option value="month" data-t="byMonth">Theo tháng</option></select>
+      <select id="fMax" data-ta="maxPrice" aria-label="Giá tối đa"></select>
+      <span class="lbl" style="margin-left:6px" data-t="datesL">Ngày ở</span>
+      <input type="date" id="fIn" data-ta="ciA" aria-label="Ngày nhận phòng"><span style="color:var(--ink2)">→</span><input type="date" id="fOut" data-ta="coA" aria-label="Ngày trả phòng">
+      <input type="search" id="fQ" data-tp="search" data-ta="search" placeholder="Tìm mã căn, vd GH6" aria-label="Tìm mã căn">
+      <button class="chip" id="fReset" type="button" data-t="reset">Bỏ lọc</button>
+    </div>
   </div>
-</main>
+
+  <p class="result" id="result"></p>
+  <div class="grid" id="grid"></div>
+  <p class="foot" id="foot"></p>
+</div>
+
+<div class="tray" id="tray" hidden><span><b id="trayN">0</b> <span data-t="traySel">căn đã chọn</span></span><button type="button" id="traySend" data-t="sendZalo">Gửi qua Zalo</button><button type="button" class="ghost" id="trayClear" data-t="clearSel">Bỏ chọn</button></div>
+<div class="sheet-bg" id="sendBg" hidden><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sendT">
+  <h2 id="sendT" data-t="sendT">Gửi các căn bạn quan tâm</h2>
+  <ol class="steps"><li data-th="step1">Bấm <b>Chép tin nhắn</b>.</li><li id="stepZalo">Mở Zalo, nhắn cho chủ nhà và dán tin nhắn.</li><li data-t="step3">Chủ nhà sẽ báo căn còn trống và hẹn lịch xem nhà.</li></ol>
+  <div id="contact"></div>
+  <label for="msg" style="font-size:13px;font-weight:600;color:var(--ink2)" data-t="msgL">Tin nhắn</label>
+  <textarea id="msg"></textarea>
+  <div class="acts"><button class="btn pri" type="button" id="copyMsg" data-t="copy">Chép tin nhắn</button><a class="btn" id="openZalo" target="_blank" rel="noopener" hidden data-t="openZalo">Mở Zalo</a><button class="btn" type="button" id="closeSend" data-t="close">Đóng</button></div>
+  <p id="copyNote" style="font-size:13px;color:var(--ink2);margin:8px 0 0"></p>
+</div></div>
+<div class="dt-bg" id="dtBg" hidden><div class="dt" id="dt" role="dialog" aria-modal="true" data-ta="dtAria" aria-label="Chi tiết căn hộ"></div></div>
+<div class="lb" id="lb" hidden><img id="lbImg" alt=""><div class="lbbar"><button type="button" id="lbPrev" data-ta="prev" aria-label="Ảnh trước">‹</button><span id="lbCap"></span><button type="button" id="lbNext" data-ta="next" aria-label="Ảnh sau">›</button><button type="button" id="lbClose" data-t="close">Đóng</button></div></div>
+
 <script>
-  // Chuyển sang trang Quỹ căn, giữ nguyên phần #c-<mã căn> nếu có (link mở thẳng 1 căn)
-  var DEST = "https://claude.ai/artifact/JtA9EjWrWVzA4mRQyhAENr";
-  var url = DEST + (location.hash || "");
-  document.getElementById("go").href = url;
-  setTimeout(function(){ location.replace(url); }, location.hash ? 150 : 900);
+const DATA = {"i18n": {"Gần Vincom Mega Mall": {"en": "Near Vincom Mega Mall", "zh": "靠近 Vincom Mega Mall 商场", "ru": "Рядом с Vincom Mega Mall", "ko": "빈컴 메가몰 인근", "ja": "ビンコム・メガモール近く"}, "Hồ bơi": {"en": "Swimming pool", "zh": "游泳池", "ru": "Бассейн", "ko": "수영장", "ja": "プール"}, "công viên 36ha": {"en": "36-hectare park", "zh": "36公顷公园", "ru": "Парк 36 га", "ko": "36헥타르 공원", "ja": "36ヘクタールの公園"}, "gym": {"en": "Gym", "zh": "健身房", "ru": "Спортзал", "ko": "헬스장", "ja": "ジム"}}, "extras": "Hồ bơi, gym, công viên 36ha · Gần Vincom Mega Mall", "updated": "2026-10-10T06:45", "contacts": [{"name": "Duy", "phone": "0365329311", "from": "", "to": ""}, {"name": "Oanh", "phone": "0985518997", "from": "", "to": ""}, {"name": "Hieu", "phone": "0983060001", "from": "", "to": ""}], "units": [{"id": "be1-1515", "c": "BE1 · 15.15", "z": "The Beverly", "t": "3PN", "p": 1700000, "m": 28000000, "g": 6, "we": 1700000, "a": 61, "v": "", "am": [], "d": "", "ph": ["p2/7ab08a0f4c01f61641a567068ea09e3a.jpg", "p0/28e7e241da343f76967d094fce01858e.jpg", "p4/dacfae24e8063a29c30b9f89040c0b39.jpg", "p4/f0b1dbf9ce3d3d79109234a226d27202.jpg", "p4/dbb91388d7a501671827cb7d3b704488.jpg", "p2/8fcd79437ee99562e56d839ee4f96e7c.jpg", "p2/8a1fde3cd8586a915955f9e7b066363a.jpg", "p2/88d23821e43dfef13c95f3bd5a113b6f.jpg", "p0/1491fa818ebb1dc2eec8fefd597f2e2f.jpg", "p2/8f0c9f9754be258d01ad7c99d9458945.jpg", "p4/d7fcf9c43b7d57d8b990b07586bef938.jpg", "p2/924103d0ae2ab85c7a9d7613d65363ce.jpg", "p2/7856b6bdac01c94aa8d44c811003f540.jpg", "p4/d11f2f4c279aa86620b6c45470472d25.jpg", "p1/31f94c090275eed6e2ecad1900403004.jpg", "p0/1a7dc2e65d16352b978509b9d523be6f.jpg", "p3/9c0b09002fe49501ce0bdc76348a07a9.jpg", "p0/1f10af87a620962f0f127ca0ea8a3722.jpg", "p2/65a38d0b4253bed03c6b3527cb1702de.jpg", "p2/6aeda56d6ed23c7ee53d4e459ff31dbf.jpg"]}, {"id": "be1-2507", "c": "BE1 · 25.07", "z": "The Beverly", "t": "2PN", "p": 800000, "m": 17000000, "g": 0, "we": 800000, "a": 0, "v": "", "am": [], "d": "", "ph": ["p4/fd9e24e8143631da9828d7ebab5c8a86.jpg", "p4/f065e810a35d95c42bb6c2d7b67e2436.jpg", "p0/0d38bfa0327bdfe8d7fa89ee0d25b61c.jpg", "p4/d07b11312386f08ed81c5ed51fdd98d2.jpg", "p3/b272c9f6200fb3559850b0cc02006e4d.jpg", "p1/4ffda3982be89ec57531c74cbddea3ff.jpg", "p0/1feb9b02eddd7443268264d88e92bdaa.jpg", "p0/1cf2da2ded0c9a0296422b2dfdd08999.jpg", "p2/767a56f7049649e5d58956384993c327.jpg", "p0/186cde9f884ee4565f71287bb4123ce8.jpg", "p1/3247b68927738330d27b85dfd483e831.jpg", "p1/3ed463f1bd000da9f21bfd322ce48126.jpg", "p0/1a18880f69d92a0a164dc6b0f24696bd.jpg", "p4/ca32b4a6a08ca7acdc9d0624b670a8e6.jpg", "p1/4ab36ba8c46c55e44cbdec82573bb199.jpg", "p3/afbe253ed5e8b60c1921f2693b81bdea.jpg", "p4/fc9997656a02bd4aed8284859b540b1e.jpg", "p4/f092f5c8ab52d7fac9b23808424809ee.jpg", "p1/511d43b25777c6a5e9cf7059109c1dcf.jpg", "p1/639d827cd51cf252d2cefb4786e94c84.jpg"]}, {"id": "be2-2808", "c": "BE2 · 28.08", "z": "The Beverly", "t": "2PN", "p": 900000, "m": 18000000, "g": 0, "we": 900000, "a": 0, "v": "", "am": [], "d": "", "ph": ["p4/f2081d32a4582c06eb7eeb32f5be0730.jpg", "p1/62d3ef664c704b722f2f2343e56df0c1.jpg", "p1/5c0d5e5c5b7c85148afce28d18d50e27.jpg", "p4/e95780ee671340adf7d222dd082d6a7b.jpg", "p0/13d25c601b4dda619fa886dbaac34920.jpg", "p1/45f6923d5a1b97d376eca6a27324af84.jpg", "p1/56704453508e0278f0087377e24a277b.jpg", "p0/051ebf509f83d8022708e9d614bfba27.jpg", "p3/b8a94162f497762d10b2eb6dba285487.jpg", "p0/251e32e46456ba0a032b6dd46f135af4.jpg", "p0/0629e1786655f3eacf4903f3beefc891.jpg", "p0/0a1b792fe601e72ac42642781a962ad8.jpg", "p1/61db6fee0c4aad44c6f565d976976f9f.jpg", "p3/ad5489b608ec950c8476ed17fdad18c1.jpg", "p0/18e016c256551ce11e7068e8eb93e9e0.jpg", "p3/b18fdd7fb70c4408bcdd338726cc5328.jpg", "p2/86126e8a798343c51c16770cbbdbd1c9.jpg", "p0/09eb2c69548eb6ed1104158874cec2a5.jpg", "p3/b5a61451587ed176631d2f810f137809.jpg", "p2/76d0ce1c8c129f120a45b090110c6664.jpg"]}, {"id": "be3-2508", "c": "BE3 · 25.08", "z": "The Beverly", "t": "3PN", "p": 1400000, "m": 27000000, "g": 0, "we": 1400000, "a": 0, "v": "", "am": [], "d": "", "ph": ["p0/03a9b954ffce4af8bc03273a11096aaf.jpg", "p2/73cc2b24102248e4827689e959c201f2.jpg", "p2/8c2876c9f7108edfba97ed6ed7a38de3.jpg", "p4/d3bd267541f7123c1854c887ac1774a1.jpg", "p0/077caa7367223829b59780a0b443e169.jpg", "p1/37b048161a120872abc8c33e77d877c2.jpg", "p4/d93d93a1fb3d61d8d040290b225d17ca.jpg", "p3/9d5dfac65deab34a15eb343799b42f18.jpg", "p0/0c1b51ae1c15b03d35d91ba848cf3bbc.jpg", "p3/b5f1bd43d6f59d6d137d407b760e0a56.jpg", "p3/995f390c3b705e8876dcf27a1d933303.jpg", "p2/7eafe079776b9791c28babd6363cb0e8.jpg", "p4/f8ad474ebca402af2a2636eb6a31936d.jpg", "p1/5bdea823e668002c6927f023cc3b0114.jpg", "p1/3e291c0c5c1d621306bfbb95288a1dc8.jpg", "p3/b99cc55433ba4d54f758d04916bcf244.jpg", "p2/6f7cc97b60d760136d5643efe8c9ab87.jpg", "p2/9559c1bc26bdb8ecd5aa9c007b758542.jpg", "p3/9659828946e141ab7f06360f17a9b6a6.jpg", "p3/a4b44b331f3cd079570c02d77e554bc6.jpg"]}, {"id": "be6-1104", "c": "BE6 · 11.04", "z": "The Beverly", "t": "2PN", "p": 800000, "m": 15000000, "g": 0, "we": 800000, "a": 0, "v": "", "am": [], "d": "", "ph": ["p1/584cb85d918680de0499fb8590ee1d1a.jpg", "p1/5636dd0cbdbc25e463c93bbdebda5b22.jpg", "p1/2dc3cf0f9a3f650c6a389a91e729fe60.jpg", "p2/6d78d1fcf01dffb57384d40ebca14b0a.jpg", "p2/81b3fc6217632f2304d8b6ff7e2e7aa5.jpg", "p3/9acef66424e02b84715b66ace99df2d4.jpg", "p2/6dba2111bd4ead61f9df9cdb642cdd38.jpg", "p0/165d604e9636cc50ce71ff0afccbf886.jpg", "p2/8f63bf104e6874837249fb00c6c9bc0d.jpg", "p2/665af3f438244e3af5348ca0af195449.jpg", "p2/75d5dc9d9ea736743b39b9d0767f922d.jpg", "p3/b57ff7e3c40a39403aa225d3f830808d.jpg", "p1/2b77aeabea14ed213672f7737dadd4d0.jpg", "p3/bdc3f25789d5c8ab560b68d86f8c2cc5.jpg", "p1/644f6bbf36beea5e3d17165b4678bf41.jpg", "p3/aae8c124733f093fa55fae016803a798.jpg"]}, {"id": "bs10-1229", "c": "BS10 · 12.29", "z": "The Beverly Solari", "t": "2PN", "p": 800000, "m": 16000000, "g": 0, "we": 900000, "a": 0, "v": "", "am": [], "d": "", "ph": ["p3/c52093139236e1ff32fb686a7186d96c.jpg", "p4/f84c216c25d85d15d064fa1b3d77cdb1.jpg", "p3/99ed8ceb1b847b8bb1124e736364f847.jpg", "p4/fd902460413f3d090738840b132022ea.jpg", "p2/93f8219786b0041576320f0c747d60a8.jpg", "p0/01806b70c2d72cb64af17c7395e0b88e.jpg", "p1/3a4d9cd3dc27cf77fc000b5371beff61.jpg", "p3/be4da288d1a286e19b007a8fd41850e0.jpg", "p2/81e48e62e396d029df6b07a66b9fbd72.jpg", "p1/509f307e07f16672e9122e399cfe1098.jpg", "p4/f6af97d74f0a927e295fe30f7f711a2d.jpg", "p1/3322ca7e4e357f567216b7f4e79330c3.jpg", "p3/b2780a94779a51d2c5026010c8670657.jpg", "p4/ebc7cc96c541a766e3803c9a445c6439.jpg", "p4/f0536fa28b64bb8e4f1abd268f2044e5.jpg"]}, {"id": "bs10-3517", "c": "BS10 · 35.17", "z": "The Beverly Solari", "t": "3PN", "p": 1000000, "m": 18000000, "g": 0, "we": 1000000, "a": 80, "v": "", "am": [], "d": "", "ph": ["p0/0de5c7edd95fc6f11bef3726663cf9e4.jpg", "p2/8ca40d7626ad75c1e4586900a31ff456.jpg", "p3/a767cfc8c3359d5ae81928f2d8d87eee.jpg", "p2/9143780285e39b18aa1c1aae043cc24e.jpg", "p4/f48ca97596a74fa580e87e827f209a30.jpg", "p0/2adcca4eb302cae2b799cd40e82d3c26.jpg", "p1/3d0296f2c70ca46bd3f9b55d0e3c53de.jpg", "p4/ed610b1daf62068805e1529d1bb5bafc.jpg", "p4/c801e759adb5461ce53e4ac43e0afe7e.jpg", "p4/cf01efda9fb1b412548b43b5ffd2c824.jpg", "p3/a48bc3c6061233e1cdcb69a69dbd241c.jpg", "p0/1f74cccb57f2eb1716c157d59fb1461d.jpg", "p4/f6e224f5680fe022e97365221665b089.jpg", "p0/1d0253557ac296de1dc4f86666d280de.jpg", "p4/cc972906a483495ae77922d99e03e1b5.jpg", "p0/06a0f903a4accfb4d0a596f2f7a8b056.jpg", "p1/4fbde8213befa109c66df95661ec9265.jpg", "p0/02bacf7d112b9e784ba32ee834be64a6.jpg", "p0/103a8e08254e1a002b573d9eff9b81fc.jpg", "p2/885921103a10d5fa03342aa8e1181737.jpg"]}, {"id": "bs16-3420", "c": "BS16 · 34.20", "z": "The Beverly Solari", "t": "2PN", "p": 650000, "m": 13000000, "g": 0, "we": 650000, "a": 0, "v": "", "am": [], "d": "", "ph": ["p1/36785706411bbc46088e264c83868f30.jpg", "p2/7e8bf67f3b64a8376093f927f6fbbd58.jpg", "p2/75d02d2e16a5ff148dc8b5beebb0c830.jpg", "p2/90ac7dbb045f31ba6e2e00bf822f6299.jpg", "p0/06b4ac1a62bbb949d9a84a583f704920.jpg", "p1/56bbfbf2fd00bf9e41ed6176bc9109e1.jpg", "p3/c1e90eb2f717542702f79a48b5202d31.jpg", "p3/978aa6557591bf0a3ff04c1adb8a74e1.jpg", "p3/a1162abaa74c4bb4ed6899f7d1519a39.jpg", "p1/62cfc043c02786fa2e7f5692dbfdf435.jpg", "p2/6cb1f54b4b94d6226631e382c22caa33.jpg", "p2/8dc7494c8feecfd7f1e9fd9ceba53b44.jpg", "p0/16adc16067a6f215af2801b01b6f47ee.jpg", "p1/53b6c0c1a91bd6af8c91b7eddb28d5bc.jpg", "p3/a72190c56497a2fa497ad32424cb45e4.jpg", "p2/802ade4e8ca8de31ab1d27227332200c.jpg", "p3/983f287ffa37b4472130b48a75525906.jpg", "p0/05915c7065ffcc240acabe81d3fd5a4f.jpg", "p1/3e881748a2b50e0b684bf2ce7911ec40.jpg", "p1/55ac4d6c9e6903dcdcad40d91c99ddeb.jpg"]}, {"id": "bs7-2104", "c": "BS7 · 21.04", "z": "The Beverly Solari", "t": "2PN+", "p": 750000, "m": 13500000, "g": 0, "we": 750000, "a": 0, "v": "", "am": [], "d": "", "ph": []}, {"id": "bs8-2915", "c": "BS8 · 29.15", "z": "The Beverly Solari", "t": "2PN", "p": 600000, "m": 13000000, "g": 0, "we": 600000, "a": 0, "v": "", "am": [], "d": "", "ph": ["p4/d66d1ff8044fcb6f65cf066bbeda5b41.jpg", "p1/50f1c3787be05131b0e83fc922f93e19.jpg", "p4/d0e003e892ed9a1a3a1ac7c32143d1a3.jpg", "p3/9e73318e1adea25c518764c4719df78e.jpg", "p3/c63a721b68de863392e487ef1d5da419.jpg", "p1/60c8188b1543fbcb4d1e2780c1a84c21.jpg", "p4/f39a408e1a14561a1c2b22f506d74049.jpg", "p0/00fa0b988abadbe560c736d87b1ef271.jpg", "p4/f90c0ad641aa9730ede251df3bc4f893.jpg", "p4/ff2435cec21f6ed1f700646c0c397b9a.jpg", "p1/63083032f256051a4420f89e7cdaaa56.jpg", "p4/e726eda181446cc2d2a9b94c7bfc5346.jpg", "p0/20da55abb96b6fb36cdc5eb224c30ade.jpg", "p3/9fcf68dc4e5d42ed7e3462807c4cc3bd.jpg", "p1/584074a512eb9222f163b8285b963f51.jpg", "p2/8db196c22e20699bbc7181ce80becb69.jpg", "p1/5be3786c27b7a17cf268aba3f3917b5c.jpg", "p0/226cdba8d8516e69a58300d97f683f5d.jpg", "p3/bcd87426c58b7555938045b0c3fdf9a8.jpg", "p3/a1b46be3ee94c150f737e374ac5eeae5.jpg"]}, {"id": "bs8-3401", "c": "BS8 · 34.01", "z": "The Beverly Solari", "t": "2PN+", "p": 700000, "m": 14000000, "g": 0, "we": 700000, "a": 0, "v": "", "am": [], "d": "", "ph": ["p1/2b9ce7411b38d4c298e42820213e10fe.jpg", "p3/b2ad86a853d50596f006e49271db41ca.jpg", "p1/2dce83be985a8b57776fe35ca3981d78.jpg", "p3/aef325a1a09719ece4d041457721d10d.jpg", "p1/4d90027c8d7e305cf2ca28aa54a01b57.jpg", "p0/25ffc571f58f9bc897978fa337d95798.jpg", "p3/9ca8c108265e108e1fa216ee6a9f766e.jpg", "p0/067bd9d7e73dddc4bd2aad280681489a.jpg", "p4/d66c40f81e9e7015d1ca429f3ab788b5.jpg", "p0/1212bbdd663589e85586b2707a2f2197.jpg", "p0/00fda1322e12661c66b6b34ff2ae3040.jpg", "p3/a4da5f26c03eb4a82447eaa5f7018374.jpg", "p2/6a2a8edc7c0032d98f0944e8d3b02385.jpg", "p2/8298840e40ab8642c77ce459474b23a0.jpg", "p4/d655d713ac9df18a6ce5e3218b1507fd.jpg", "p0/233c19b1bc6fd115c2e079f2f188d044.jpg", "p0/21cb1fd73d2c1c429d5f7ff6f199b621.jpg", "p2/753a7faa264315675f5de0a5e052a3e8.jpg", "p0/0304cef32a8d03dc852abc59ead97ed4.jpg", "p0/175e60293e891eb18218ddd4c686fa50.jpg"]}, {"id": "bs9-1111", "c": "BS9 · 11.11", "z": "The Beverly Solari", "t": "3PN", "p": 1400000, "m": 19000000, "g": 0, "we": 1500000, "a": 0, "v": "", "am": [], "d": "", "ph": ["p2/89288146c9b027e54723f4aca917e46e.jpg", "p4/e779868374d08790a1c1bf6de51a45ee.jpg", "p3/c4716682a545e8e8ff20ac5f5ece0c5b.jpg", "p4/fbb81e52149241d4bd9c1e264daa5889.jpg", "p4/e8d9cc59a1836afbd5e1f5f7568aa495.jpg", "p0/1571e16a0f74a1c5958f660ce3cdf692.jpg", "p4/c80b00cc712dc83cc5ee7255f8d11de8.jpg", "p2/6aa48fe19f95960ab11dcc61c81b9854.jpg", "p3/9e95db13d1f39b8c17d83d1e8211a68a.jpg", "p0/035e6e6c9f07c1728b33bc24b8863c51.jpg", "p4/dcb1ad57e2bf80e4b3ca3d433886810a.jpg", "p4/e2dbec0886fd486108c046b686aab634.jpg", "p3/a3c43b551a6831625948add4ec46444a.jpg", "p1/647d0dafdf76d5342c28215ef159938a.jpg", "p1/445b44140b44ea6a62ee468fdef82621.jpg"]}, {"id": "4epgg4wupkda", "c": "BS9.18.11", "z": "The Beverly Solari", "t": "3PN", "p": 1400000, "m": 21000000, "g": 6, "we": 1500000, "a": 80, "v": "", "am": [], "d": "", "ph": ["p3/a001ed6a4bf89501864665f27a2ef0b1.jpg", "p0/09d48f458035e45edd020ebf62af8280.jpg", "p2/79b82b293f4bf120b89c241018695379.jpg", "p0/1506ba24c46c2b0f6a4f73fe75f7963e.jpg", "p3/ad496ba85108ac38e70255fed28b18a1.jpg", "p1/3928eaef5f7b17ce5f4b2298aed5ce02.jpg", "p0/292ef0776dbcd5c4724879525cf2f074.jpg", "p2/857c8c34b2ecddad7c6b66f6509314e0.jpg", "p0/0f6fe0d081838abe471ef7443568eedf.jpg", "p2/7e009f06a84f75fb64adacb1fdd868c9.jpg", "p0/02c79314634a401350c19ddccd18ee87.jpg", "p0/23351f430009fb38f6924b6648a932d8.jpg", "p1/42b5161456b89cf5982b50e269efa70a.jpg", "p3/a2d6b0011d079781caaf4ac63e09c22c.jpg", "p4/e6f2f480383b9c076ffd1ea9f92f5d62.jpg", "p1/3db10186bd68d662eb6cd7849da6b122.jpg"]}, {"id": "gh1-1609", "c": "GH1 · 16.09", "z": "Glory Heights", "t": "2PN", "p": 750000, "m": 14500000, "g": 0, "we": 750000, "a": 0, "v": "", "am": [], "d": "", "ph": []}, {"id": "gh2-0817", "c": "GH2 · 08.17", "z": "Glory Heights", "t": "3PN", "p": 1500000, "m": 24500000, "g": 0, "we": 1500000, "a": 0, "v": "", "am": [], "d": "", "ph": ["p1/470319261ee18a899e84a224ec7e7948.jpg", "p4/d239d0780c2fd188eb760fe8f717b9b1.jpg", "p3/c6b975af6568606cf2fdf1791d190dd6.jpg", "p1/5d559f6f49a7190ef156e80b760461c3.jpg", "p4/d6f9e44998839e8b0d01b36b01bccee5.jpg", "p4/d2e05adc6d7d78a268288db857d92cd4.jpg", "p4/cfdfd7859834c9f27abdb7100011feef.jpg", "p3/9c01ff45a76a0446f4df055adc06f4f6.jpg", "p1/3346f7d9ea487758c71b0c1735033c1a.jpg", "p2/89aea4281b81406ed432268f9a372028.jpg", "p2/95b6a3319f0c8a1d06298e6e977ea4b0.jpg", "p0/236dd69fbda3b9db77882238d786ac09.jpg", "p2/7439e14307d95332d0d2012c7488e3cd.jpg", "p4/f722871198aacb4bd308f7f8a14842a4.jpg", "p2/72c68e76876f1c7da18353ec43d96b05.jpg", "p3/af0a2e208557a6e5e7d8c27bdd22b2cf.jpg", "p2/774fe2a943934d850506cc776e773fa1.jpg", "p0/145a259bea82ad9b581d4591344b6135.jpg", "p1/46457e03726c91393a54b5b67d19397f.jpg", "p0/08b6f6404a1da3f4ebc2d3a93551ad51.jpg"]}, {"id": "gh2-1216", "c": "GH2 · 12.16", "z": "Glory Heights", "t": "2PN", "p": 700000, "m": 12500000, "g": 0, "we": 700000, "a": 0, "v": "", "am": [], "d": "", "ph": ["p3/a3473e95e723f10593985e51d3edfd15.jpg", "p3/b9b4fd97260cb4d36c6b711363d75363.jpg", "p4/eb54d42e6c75ddf77f7f595db6b7b8c9.jpg", "p1/3a425b2b7495bf3484d0c044ceb7fe1a.jpg", "p0/0b33d5ed90e76d1c26897f0b1adaf4f5.jpg", "p1/5057255e9396b47866d0a1092f1025e4.jpg", "p3/a3db74ad4b0d173e50e45effdcf227f0.jpg", "p2/8b4d7d347e73a5ff4a82fefe7d6d5152.jpg", "p0/0af6d8a613501a0e915810afcfbaf6a2.jpg", "p2/7c7e16534e7cd8cc63980cba6085e05a.jpg", "p1/43b173ed82162ee8205e1c5ee30f4e7d.jpg", "p1/5c46bba8f29087a8f31def0b0fb2ce12.jpg", "p3/ae50c8194e24dd695276f7a4d8141140.jpg", "p1/5dce4300c0f078f37b48c7b243fe9b3f.jpg", "p0/009b31608d81b001ea7fe7dd74cdef4f.jpg", "p0/0562c2acb22bc8e9fbd8ff13ac0efdcf.jpg", "p4/cf0962bb348aca07137a6ca10062ca36.jpg", "p1/649a0b888ff6221d11f455a2bed4818f.jpg", "p1/46cee1e84e17bc2f4ffb753c0b974287.jpg", "p3/9bbe1644607642700a5f7dedbf3e8702.jpg"]}, {"id": "gh2-1718", "c": "GH2 · 17.18", "z": "Glory Heights", "t": "3PN", "p": 1400000, "m": 20000000, "g": 6, "we": 1500000, "a": 0, "v": "", "am": [], "d": "", "ph": ["p3/c005b078c69c0a97b749872e9ca26844.jpg", "p4/ecdf18df002ed32e3cab77de70814014.jpg", "p0/253702955705a49419cf0e467aee9b92.jpg", "p3/c0f1362a1d8b84b90d230ec4af3c75f8.jpg", "p1/32fc9b84f51985daf043c97d3d223982.jpg", "p1/62387d28ef7d5764243ff08adc262880.jpg", "p4/f2ee1009f32636ee1e3c42a5af760598.jpg", "p3/ae257e28681a25e10d2cd23d208b3563.jpg", "p4/d0e1c6022a8a1934fce6cf0a3c704027.jpg", "p3/b1122f9e8d5ac0ce2752551ce612861e.jpg"]}, {"id": "gh2-2718", "c": "GH2 · 27.18", "z": "Glory Heights", "t": "2PN+", "p": 800000, "m": 15500000, "g": 0, "we": 800000, "a": 0, "v": "", "am": [], "d": "", "ph": ["p3/a4983c5d2d4fc96c37348bddda8cfbfd.jpg", "p2/8581e79fbea8c33c4108b9933f0c391d.jpg", "p0/1816d19df8941fca2d8ce8bc527d3fcc.jpg", "p3/969d6a919a40369d5538af1a6fd0ca96.jpg", "p0/139233d6b6a510c3f6b6f07d63ced71f.jpg", "p2/8252859ce9cdc65cff8f44d8e22a7f1f.jpg", "p2/70adeef03a0c422aed1fcd6298567707.jpg", "p4/d7db946f1f8ef29efefdfdf9be1f14e6.jpg", "p3/a01e8474e36eeb9c4987852dc7198266.jpg", "p2/852461f69a38235714a8f97ed6429ba1.jpg", "p4/f52396f69e3325a08df17b9b20213501.jpg", "p3/ab55c8ad4cbbc7823dfa9c144feec788.jpg", "p3/aba29f659bdc2bdda66e4aa3cc62af6c.jpg", "p3/a8b02bf8ccdc0ba3b33582ed7e0a8e54.jpg", "p3/b625d3760ebb02430121e2f4939a0488.jpg", "p1/4238adf8457bd39e6885424180ec1b85.jpg", "p2/775cbec044df7a763af87a70f866c44e.jpg", "p4/f920e7d3096d4fda95d1f396aed19a89.jpg", "p0/1da9fc725e5c03ed5f9f2c225e420a30.jpg", "p2/83ffc7ab33690cc4c6ba3fafe81e0195.jpg"]}, {"id": "gh2-3320", "c": "GH2 · 33.20", "z": "Glory Heights", "t": "2PN", "p": 750000, "m": 14500000, "g": 0, "we": 750000, "a": 0, "v": "", "am": [], "d": "", "ph": ["p4/f55cb8ef4ce5b8be9a90402c00d0fa8d.jpg", "p2/940f179dbf280a1e74fa3d406399726a.jpg", "p1/34ed939733e2eff98f9b392c0bc594f3.jpg", "p3/c06263d3ebe0528602f8628c39575c79.jpg", "p2/832073dcdd8b1495b9a25586160cce58.jpg", "p0/06b63c006215713818716479614294ee.jpg", "p1/64779aea7440252178dfb7b41b44bb07.jpg", "p1/3d9eb8a5d8b187f4528a1263b34e9ef9.jpg", "p1/3cf4916f64770af1573d49c4b5673f76.jpg", "p0/010e239a00bf313e60916ff54a66805b.jpg", "p1/5195394100d1868d3d423e35276cfaa2.jpg", "p2/9068a499169e88d8726ec7745d1f94d9.jpg", "p0/1bf67a92db7d09f9970ff065fb6342e2.jpg", "p2/69c02b80fb9bd047bc7bc943fb6f88f5.jpg", "p3/c1946f8a5f2cdcde0898f08e0ee11b53.jpg", "p0/16bf806349a7228d77a7a5cf16fc9d14.jpg", "p0/0b879b3450131bfad0676a76c5f446e3.jpg", "p2/71248263ba6fc26cd15640f8a4ce9abf.jpg", "p2/88575f45fc191a8b9d60ed22b9bfeee5.jpg"]}, {"id": "gh3-3601", "c": "GH3 · 36.01", "z": "Glory Heights", "t": "2PN+", "p": 800000, "m": 15500000, "g": 0, "we": 800000, "a": 0, "v": "", "am": [], "d": "", "ph": ["p1/37e35184754ec2aa7c489c70dacc7e4b.jpg", "p0/1bed3d16f667d738c1e8a5d894c874c4.jpg", "p2/74aaf86e1823d2c0dc14e836f25af4e5.jpg", "p3/a73083bc7bd8cd1c1c3d322413167cbf.jpg", "p1/333e81090f7a0b30821f20ec2758b28d.jpg", "p4/e5d3b4c2c67879770d6d5bbcabd46407.jpg", "p0/213ce7db0198896f2e01bbd050bee259.jpg", "p0/1a6278c44229c11f7751955d729d9abb.jpg", "p4/fd294b1e864688a1e4b9180cd98f2f27.jpg", "p3/afe4b6ddb07d1db72aa5b6b1740aaf5e.jpg", "p2/89482b9772991d0e89ea2bef7bb4f6c7.jpg", "p0/0617b1d0a86ed3c8fcc88208b9c75d7b.jpg", "p2/674130b794f8a50dffe7654b0602cdf7.jpg", "p4/e51c0d46e503199bc496241efb2d8abb.jpg", "p1/4311b3b9d1cf64321d293ea2c1df11c4.jpg", "p3/c032675f5e6b2850901ff9499c68ee03.jpg", "p3/b664a30bf19164269f7a61580ee84a86.jpg", "p1/47c4cc17f22429e2a13ec28929890770.jpg", "p3/b11264d83804573018e93608bab178d0.jpg", "p1/5d3ec89029c584bd71b23f5518aebe19.jpg"]}, {"id": "gh5-0510", "c": "GH5 · 05.10", "z": "Glory Heights", "t": "2PN+", "p": 800000, "m": 14000000, "g": 0, "we": 800000, "a": 0, "v": "", "am": [], "d": "", "ph": ["p3/a3a1aa614ec27bbb8e5aa976f92ba0f4.jpg", "p0/2083c65455e68d4a3431a6a80cc3a3f5.jpg", "p1/64963299cd144c78dd272ccb575b323d.jpg", "p2/81b051e6846f61c8e50c46a25f879d08.jpg", "p1/304400f45070dde9bb267c09cb807770.jpg", "p4/d1841f52fec13da1ab27c4b2fb8b8282.jpg", "p1/30ea96a21cbcf0044c808faee36bef41.jpg", "p1/55a297f513eeb154b22673176859903a.jpg", "p3/c37cf615230e60ab7f3404e9f5b90255.jpg", "p1/5c3a65a506bac52fb5e7783c2fbfa013.jpg", "p0/05a015b97181d77409a7ee751bb2361d.jpg", "p1/551fc6888aedd26779bb66505b3850be.jpg", "p1/6469cf8f73f2517e47a1d6af27ec76cf.jpg", "p4/d99125e1a49d056994fd33da55d5d92f.jpg", "p1/61cf9b4ff43e4bb530a70e5480072652.jpg", "p1/5216102bbf76d28d9a2bd0a60c387c60.jpg", "p4/d2d0a9424179c2b43c3f01880d07af94.jpg", "p1/5e779523055e2c9e71bb869266b13de4.jpg", "p3/9a2d88e3f97cc84ccd665f8e62cde268.jpg", "p3/a710e011bc724933164769d2c14ff490.jpg"]}, {"id": "gh5-1118", "c": "GH5 · 11.18", "z": "Glory Heights", "t": "2PN", "p": 600000, "m": 12500000, "g": 0, "we": 600000, "a": 0, "v": "", "am": [], "d": "", "ph": []}, {"id": "gh6-1405", "c": "GH6 · 14.05", "z": "Glory Heights", "t": "3PN", "p": 1500000, "m": 24500000, "g": 0, "we": 1500000, "a": 0, "v": "", "am": [], "d": "", "ph": ["p0/1cf13fdc91d2d4c4b524be4d4a42c023.jpg", "p3/bdbed029c632057595422f0739e635b4.jpg", "p0/242b742a810f9e05d1cf8534ac55f704.jpg", "p2/73c931fed0bd6443b631948bc1369490.jpg", "p1/380237fbba5daf7d8510f33da3155cd4.jpg", "p4/d70b44441d678793ce2f63fe1e716c88.jpg", "p0/2b667eebbd2455294d11cba5200e3673.jpg", "p1/30c5e74b13eb97ff2136dee5524b993b.jpg", "p1/2c569b2cb3208e7a802ffc6d6c391124.jpg", "p2/654f67df6a20bb930cd2ec04fd210e61.jpg", "p1/3f82c851c5ae5fdb7baf732dec0c2384.jpg", "p2/827097142a0678d8905d2bc4a916db70.jpg", "p1/4f659a7f5e1841ff19132d2bd656a015.jpg", "p3/c5d84e1118a725f0d7bbe605e875a9c8.jpg", "p4/e5a7a8d90de2b063806082fbdb5403d4.jpg", "p4/e3e551440b1867e63b0fa72711ff3e38.jpg", "p4/ca0866719d792eebb265f9d59b8532c2.jpg", "p2/7789714f4aba8d46b3ef764f22d1a450.jpg", "p4/f5862e0b5595bff2c43efdfadfac5623.jpg", "p2/6c5325c32960401681c1cd6f983f7d26.jpg"]}, {"id": "gh6-2010", "c": "GH6 · 20.10", "z": "Glory Heights", "t": "2PN", "p": 800000, "m": 16000000, "g": 0, "we": 800000, "a": 0, "v": "", "am": [], "d": "", "ph": []}, {"id": "gh6-2307", "c": "GH6 · 23.07", "z": "Glory Heights", "t": "2PN", "p": 750000, "m": 14500000, "g": 0, "we": 750000, "a": 0, "v": "", "am": [], "d": "", "ph": ["p4/efe0bfbb2fbd41988ce90a766ccd4ff7.jpg", "p2/64a067234bd05f0ede76a2d08e084175.jpg", "p2/898239cfcdece6c78c1226b825130c44.jpg", "p0/1144b9fe5bc062dcfdeec9486d1fec20.jpg", "p4/e32db7b6d75cb393e787b794a7d29ac2.jpg", "p4/e13756020c2d03fa8d0bf09de9af25aa.jpg", "p0/267c1610ea605c70490a0de3b9a517ba.jpg", "p0/18145cc63cb03fc7ad372bc498aed202.jpg", "p2/772e3fa73ebb865e22559430e65cc889.jpg", "p1/322ce5dd9f34a9632fef8cbbe49d5a44.jpg", "p2/7fcf2b924f24d968130b90add16148c3.jpg", "p4/f84276a8d5f260f3754f399f0eef6737.jpg", "p3/a989385db8e7764d74904e2e8d9c33d3.jpg", "p0/07f0180be2096529cd641523aecc17b8.jpg", "p4/cafcc5535133a09e6d8c2f931e205ea3.jpg", "p2/72cb8732267ab9fb7461c1c5cdaf8273.jpg", "p3/987821612789f1a6d1da0458ada9cf0a.jpg", "p2/67b6cbc30f8f60edbb78b090a7d77448.jpg"]}, {"id": "os1-2403", "c": "OS1 · 24.03", "z": "The Opus One", "t": "2PN", "p": 900000, "m": 20000000, "g": 0, "we": 900000, "a": 0, "v": "", "am": [], "d": "", "ph": ["p0/186a9a9b69dc1e9ecf814b3e3ae9d6d2.jpg", "p3/c13d0ab1486967fac0ccb71922b6e3fe.jpg", "p2/73d366e0cdce7b6dfc9da81a5e18268a.jpg", "p2/6e62909cb728989c2eb8dd4b6f2fea30.jpg", "p2/78c0b1da57ed3cd389c2b13643ea202a.jpg", "p4/d32635668105b6a2a0f0654981734dbb.jpg", "p3/ab25e64af5aad3107b6f7e4f2d0e2245.jpg", "p0/18756b04b7b6eec79b0e3925b9f86a7d.jpg", "p3/c6b7f5c8f505db37ae34fcdc43b080c4.jpg", "p3/a2c215eccedaa6f4a7d64b0c5a0e111d.jpg", "p1/4b751a6fb142965a24051e60d18e52e4.jpg", "p4/fd8da94155a03151c23f66ef98b7a797.jpg", "p3/ae49904ff440c00bca9ade2398b3fc9b.jpg", "p1/427b4667e4ec86072a53e8dbd71139fd.jpg", "p4/fc85cafdf2d3586c85edafa50796d302.jpg", "p2/6ea845526197887b8d8f7483531b1020.jpg", "p1/5c4f32f8ab06a7d0bc6fbe6857599ddf.jpg", "p4/c70dd3ccde68a8b4ea1ce0693df3853e.jpg", "p0/100544f8b17c3f1b0bd83e0c1323520a.jpg", "p2/6f5a62f6c47a05a273a5d200b45c3b29.jpg"]}, {"id": "os5-0711", "c": "OS5 · 07.11", "z": "The Opus One", "t": "2PN", "p": 900000, "m": 20500000, "g": 0, "we": 900000, "a": 0, "v": "", "am": [], "d": "", "ph": ["p4/e71b6d47f0822340c43c5dc76be0e1b4.jpg", "p1/5c5f2b0b41d06dbfe81318d1417e69d8.jpg", "p0/1d0e3a8fdb1a7e1cf54661ac4aca180d.jpg", "p4/f8a77ae3e98da300aac6aa972ac4b1a3.jpg", "p2/8f8486b92f2becb0853c311bc2224b70.jpg", "p0/1af3520ddd5a41064c733d088f050bd7.jpg", "p0/16e5376337103285b706a34eaffa11c2.jpg", "p2/704660312fde0d182e431d1c519c79ac.jpg", "p2/681975a9e5674883fb97519d26130f77.jpg", "p3/af01cb0b3730df1000c2f26cea316fbb.jpg", "p3/b32ccadf73c2892a40a3dbfce2271733.jpg", "p4/e66b42fb3ab917be4de6882c80ef1bb2.jpg", "p2/8d837021508047e4a6dfaf0d13a5bfd5.jpg", "p0/267fe93e5376866b243c4d78312db3a3.jpg", "p2/861c990671234c3d572d4126ff27ca77.jpg", "p2/78254ebf4e58314c06fdf14788f096b6.jpg"]}, {"id": "os5-1516", "c": "OS5 · 15.16", "z": "The Opus One", "t": "2PN", "p": 900000, "m": 20000000, "g": 0, "we": 900000, "a": 0, "v": "", "am": [], "d": "", "ph": ["p3/a583d425f9c9aafc43ea29d4de459953.jpg", "p1/4bb529fb852c60bef1c8ce1b20bf78e8.jpg", "p3/9bbee47e6d6da962b7cdecabc009aada.jpg", "p4/cc24f1420e5070a9ea042b97b00dfa99.jpg", "p3/c114e8ea8d210ea6afb64ac54ae19394.jpg", "p3/987623cb37958877572c60140df599c1.jpg", "p0/27cd8f4834c76e3f989db9b39096fdc6.jpg", "p0/27916fc8dd58c65d4a10ad035f432d47.jpg", "p2/6ab4068d3292797df49c0580f232caea.jpg", "p1/2bb1adcc778927235196b763bcc7e252.jpg", "p0/23867024c56c5efd9990498525761703.jpg", "p3/97b81cdc36ee78b800903077265649e0.jpg", "p1/3d4b37de61bd20eeacafad6c785fd2b6.jpg", "p3/bd4eb9dddd6513e4adecfe023939f050.jpg", "p4/eec6c8fde1f19bf50e9bc33e2c2ef7d3.jpg", "p1/5e55a97839b92c82958f0bab8f08abe6.jpg", "p0/08e16356d76e85f22f2ea3779d403870.jpg", "p2/79d003a15bb0aa76209923c2609bfef5.jpg", "p0/1d6e008341129991ef8b834a59787399.jpg", "p2/6ace1c326e67f599eac0c7bc52e79a95.jpg"]}, {"id": "s605-1110", "c": "S6.05 · 11.10", "z": "The Origami", "t": "2PN+", "p": 600000, "m": 12000000, "g": 0, "we": 600000, "a": 0, "v": "", "am": [], "d": "", "ph": ["p0/086d412bbb58d60875cc2bda3a0c4067.jpg", "p4/cf989d612aa0742dde68590c21aa8b58.jpg", "p2/77bb7903083cb80a31b8872e6ee41af0.jpg", "p1/6292e1bc3c6eb753402495ba442d55be.jpg", "p2/94891aae3d5e6dcd6d031ac9e09e5742.jpg", "p3/bacd4033098587ae2e8f95b239b34102.jpg", "p0/1c016c4a4a23e235b9ab3f5c7af15818.jpg", "p2/65dc2a6ae23488ac6b59c74d23e9499d.jpg", "p1/5521a5eb1116f7b4fbf6cda4ed86a3f4.jpg", "p3/be946866da0b2e594c4629f9082219dd.jpg", "p4/fee3f7810e83703c624700edcf133713.jpg", "p4/f4c384bd05e3de749268962184b2ff48.jpg", "p3/bba6f40c8f11919746063f1da5a44622.jpg", "p2/8290d9f7703adc5500b9575139e4d67f.jpg", "p0/19325f8c74da5c10655292e35b7bf369.jpg", "p3/9c18a62986aa2dfaeeac39fe1e863238.jpg", "p0/1265dfd2ba683a9cc66d9aadc8d33f40.jpg", "p3/ac06b0210e12937a162efba67e7c18ba.jpg", "p4/f789d50d9ba8e765ec2cc8d76c901213.jpg", "p1/51a739e589d62b2a4414a7c5377d29dd.jpg"]}], "busy": {"4epgg4wupkda": [["2026-09-25", "2026-10-25"]], "be1-1515": [["2026-10-08", "2026-10-14"]], "be1-2507": [["2026-09-30", "2026-11-05"]], "be2-2808": [["2026-06-25", "2026-10-25"]], "be3-2508": [["2026-09-11", "2026-11-11"]], "be6-1104": [["2026-09-17", "2026-10-17"]], "bs10-1229": [["2026-09-01", "2026-11-01"]], "bs10-3517": [["2026-09-27", "2026-10-27"]], "bs16-3420": [["2026-09-24", "2026-10-13"]], "bs7-2104": [["2026-07-31", "2027-07-31"]], "bs8-2915": [["2026-07-07", "2026-10-10"], ["2026-10-08", "2027-04-06"]], "bs8-3401": [["2026-09-28", "2026-10-28"]], "bs9-1111": [["2026-09-14", "2026-10-14"]], "gh1-1609": [["2026-09-23", "2026-10-23"]], "gh2-0817": [["2026-07-03", "2026-11-03"]], "gh2-1216": [["2026-08-13", "2026-11-11"]], "gh2-1718": [["2026-09-12", "2026-10-12"]], "gh2-2718": [["2026-07-27", "2026-10-26"]], "gh2-3320": [["2026-09-18", "2026-10-18"]], "gh3-3601": [["2026-09-11", "2026-10-10"], ["2026-10-11", "2026-11-01"]], "gh5-0510": [["2026-07-12", "2026-10-11"]], "gh5-1118": [["2026-07-15", "2026-10-15"]], "gh6-1405": [["2026-04-25", "2026-10-25"]], "gh6-2010": [["2026-10-01", "2027-01-01"]], "gh6-2307": [["2026-10-05", "2026-10-16"]], "os1-2403": [["2026-06-15", "2026-10-14"], ["2026-10-15", "2026-11-01"]], "os5-0711": [["2026-10-04", "2026-10-09"]], "os5-1516": [["2026-09-30", "2026-10-30"]], "s605-1110": [["2026-09-15", "2026-10-15"], ["2026-10-16", "2026-11-01"]]}};
+const I18 = {
+vi:{title:"Quỹ căn Vinhomes Grand Park", lede:"Căn hộ cho thuê ngắn ngày và theo tháng tại Thủ Đức. Lọc theo phân khu, số phòng ngủ, giá và ngày ở, bấm ảnh để xem cả bộ, chọn những căn bạn thích rồi gửi qua Zalo để được báo trống và hẹn xem nhà.",
+ zoneL:"Phân khu", bedL:"Phòng ngủ", priceL:"Giá", byNight:"Theo đêm", byMonth:"Theo tháng", datesL:"Ngày ở", search:"Tìm mã căn, vd GH6", reset:"Bỏ lọc", all:"Tất cả", anyPrice:"Mọi mức giá", under:"Dưới {x}",
+ empty:"Chưa có căn khớp bộ lọc. Thử bỏ bớt điều kiện hoặc đổi ngày.", result:"{n}/{t} căn", resultDates:" trống trong ngày bạn chọn",
+ sApt:"căn hộ", sZone:"phân khu", sFree:"căn trống tối nay", sPh:"ảnh thực tế", foot:"Giá và lịch trống cập nhật lúc {t}. Giá có thể thay đổi theo mùa, vui lòng nhắn để xác nhận.",
+ stRange:"Trống {a} → {b}", stBusySel:"Kín ngày đã chọn", stTonight:"Trống tối nay", stFrom:"Trống từ {d}", stOcc:"Đang có khách",
+ phAlt:"Ảnh căn {c}", apt:"Căn hộ", phSoon:"Ảnh đang cập nhật", nPh:"{n} ảnh", maxG:" · tối đa {g} khách", ask:"Liên hệ", perNight:"mỗi đêm", perMonth:"mỗi tháng", details:"Xem chi tiết", picked:"✓ Đã chọn", pick:"Chọn căn",
+ traySel:"căn đã chọn", sendZalo:"Gửi qua Zalo", clearSel:"Bỏ chọn", sendT:"Gửi các căn bạn quan tâm", step1:"Bấm <b>Chép tin nhắn</b>.", step3:"Chủ nhà sẽ báo căn còn trống và hẹn lịch xem nhà.", msgL:"Tin nhắn", copy:"Chép tin nhắn", openZalo:"Mở Zalo", close:"Đóng",
+ stepHas:"Bấm Nhắn Zalo cạnh tên người tư vấn. Thông tin các căn được chép sẵn, trong Zalo chỉ cần Dán rồi Gửi.", stepNo:"Mở Zalo, nhắn cho người đã gửi trang này và dán tin nhắn.",
+ copied:"Đã chép. Mở Zalo và dán vào khung chat.", copyFail:"Máy chưa cho chép tự động. Tin nhắn đã được bôi đen, bấm giữ và chọn Sao chép.",
+ advisor:"Tư vấn", onDuty:"Đang trực", msgZalo:"Nhắn Zalo", zOk:"Đã chép thông tin căn. Trong Zalo, bấm giữ ô chat → Dán → Gửi.", zFail:"Zalo đang mở. Quay lại bấm “Chép tin nhắn” rồi dán vào Zalo.",
+ free:"Trống", booked:"Đã có khách", days:["CN","T2","T3","T4","T5","T6","T7"], back:"Quay lại", backAria:"Quay lại danh sách căn", fNight:"Giá mỗi đêm", fWeekend:"Cuối tuần (T6–T7)", fMonth:"Giá thuê tháng", fArea:"Diện tích", fMax:"Tối đa", guests:"{g} khách", fView:"View",
+ about:"Giới thiệu", amen:"Tiện ích trong căn", around:"Tiện ích khu & xung quanh", cal14:"Lịch trống 14 ngày tới", calNote:"Ô xanh là còn trống, ô gạch là đã có khách. Nhắn để xác nhận trước khi chốt.", msgHost:"Tin nhắn gửi chủ nhà", contactZ:"Liên hệ tư vấn qua Zalo", addList:"Thêm vào danh sách", backOther:"Quay lại xem căn khác",
+ dtCopHas:"Đã chép. Bấm Mở Zalo (hoặc nhắn số ở dưới) rồi dán tin nhắn.", dtCopNo:"Đã chép. Mở Zalo và dán cho người đã gửi trang này.", prev:"Ảnh trước", next:"Ảnh sau", dtAria:"Chi tiết căn hộ", other:"Khác", priceBy:"Tính giá theo", maxPrice:"Giá tối đa", ciA:"Ngày nhận phòng", coA:"Ngày trả phòng",
+ m1:"[Quỹ căn] Khách hỏi căn {c}", mPrice:"• Giá: ", mDates:"Ngày ở: ", mGuests:"Số khách: ", mView:"Xem căn: ", mAsk1:"Anh/chị báo giúp em căn còn trống không và hẹn lịch xem nhà nhé.", mMulti:"[Quỹ căn] Khách hỏi {n} căn ở Vinhomes Grand Park:", mAskN:"Anh/chị báo giúp em căn nào còn trống và hẹn lịch xem nhà nhé.", night:"/đêm", month:"/tháng"},
+en:{title:"Vinhomes Grand Park Apartments", lede:"Short-stay and monthly apartment rentals in Thu Duc, Ho Chi Minh City. Filter by area, bedrooms, price and dates, tap a photo to see the full set, then pick the apartments you like and send them to us on Zalo to check availability and book a viewing.",
+ zoneL:"Area", bedL:"Bedrooms", priceL:"Price", byNight:"Per night", byMonth:"Per month", datesL:"Dates", search:"Search unit code, e.g. GH6", reset:"Clear filters", all:"All", anyPrice:"Any price", under:"Under {x}",
+ empty:"No apartments match these filters. Try removing a filter or changing the dates.", result:"{n}/{t} apartments", resultDates:" available on your dates",
+ sApt:"apartments", sZone:"areas", sFree:"available tonight", sPh:"real photos", foot:"Prices and availability updated {t}. Prices may change with the season, please message us to confirm.",
+ stRange:"Free {a} → {b}", stBusySel:"Booked on your dates", stTonight:"Free tonight", stFrom:"Free from {d}", stOcc:"Occupied",
+ phAlt:"Photo of {c}", apt:"Apartment", phSoon:"Photos coming soon", nPh:"{n} photos", maxG:" · up to {g} guests", ask:"Ask us", perNight:"per night", perMonth:"per month", details:"View details", picked:"✓ Selected", pick:"Select",
+ traySel:"selected", sendZalo:"Send via Zalo", clearSel:"Clear", sendT:"Send the apartments you like", step1:"Tap <b>Copy message</b>.", step3:"We will confirm availability and arrange a viewing.", msgL:"Message", copy:"Copy message", openZalo:"Open Zalo", close:"Close",
+ stepHas:"Tap “Message on Zalo” next to an advisor. The apartment details are copied for you, just paste and send in Zalo.", stepNo:"Open Zalo, message the person who sent you this page and paste the message.",
+ copied:"Copied. Open Zalo and paste it into the chat.", copyFail:"Couldn't copy automatically. The message is selected, long-press it and choose Copy.",
+ advisor:"Advisor", onDuty:"On duty", msgZalo:"Message on Zalo", zOk:"Apartment details copied. In Zalo, long-press the chat box → Paste → Send.", zFail:"Zalo is opening. Come back, tap “Copy message” and paste it into Zalo.",
+ free:"Free", booked:"Booked", days:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"], back:"Back", backAria:"Back to the list", fNight:"Per night", fWeekend:"Weekend (Fri–Sat)", fMonth:"Monthly rent", fArea:"Size", fMax:"Max guests", guests:"{g} guests", fView:"View",
+ about:"About", amen:"In the apartment", around:"Building & nearby", cal14:"Availability, next 14 days", calNote:"Green means available, crossed out means booked. Please message us to confirm before booking.", msgHost:"Message to send us", contactZ:"Contact us on Zalo", addList:"Add to list", backOther:"Back to other apartments",
+ dtCopHas:"Copied. Tap “Message on Zalo” below and paste.", dtCopNo:"Copied. Open Zalo and paste it to the person who sent you this page.", prev:"Previous photo", next:"Next photo", dtAria:"Apartment details", other:"Other", priceBy:"Price per", maxPrice:"Max price", ciA:"Check-in", coA:"Check-out",
+ m1:"[Apartments] Inquiry about {c}", mPrice:"• Price: ", mDates:"Dates: ", mGuests:"Guests: ", mView:"View: ", mAsk1:"Could you let me know if it is available and when I can view it?", mMulti:"[Apartments] Inquiry about {n} apartments at Vinhomes Grand Park:", mAskN:"Could you let me know which ones are available and when I can view them?", night:"/night", month:"/month"},
+zh:{title:"Vinhomes Grand Park 公寓房源", lede:"胡志明市守德区的短租和月租公寓。可按小区、卧室数、价格和日期筛选，点击照片查看全部图片，选好喜欢的房源后通过 Zalo 发给我们，确认空房并预约看房。",
+ zoneL:"小区", bedL:"卧室", priceL:"价格", byNight:"按晚", byMonth:"按月", datesL:"入住日期", search:"搜索房号，如 GH6", reset:"清除筛选", all:"全部", anyPrice:"不限价格", under:"{x}以下",
+ empty:"没有符合条件的房源。请减少筛选条件或更换日期。", result:"{n}/{t} 套", resultDates:"在所选日期有空",
+ sApt:"套公寓", sZone:"个小区", sFree:"套今晚有空", sPh:"张实拍照片", foot:"价格和空房信息更新于 {t}。价格可能随季节变化，请发消息确认。",
+ stRange:"{a} → {b} 有空", stBusySel:"所选日期已满", stTonight:"今晚有空", stFrom:"{d} 起有空", stOcc:"已入住",
+ phAlt:"{c} 照片", apt:"公寓", phSoon:"照片更新中", nPh:"{n} 张照片", maxG:" · 最多 {g} 人", ask:"咨询", perNight:"每晚", perMonth:"每月", details:"查看详情", picked:"✓ 已选", pick:"选择",
+ traySel:"套已选", sendZalo:"通过 Zalo 发送", clearSel:"取消选择", sendT:"发送您感兴趣的房源", step1:"点击<b>复制消息</b>。", step3:"我们会确认空房并安排看房。", msgL:"消息", copy:"复制消息", openZalo:"打开 Zalo", close:"关闭",
+ stepHas:"点击顾问旁边的“Zalo 联系”。房源信息已自动复制，在 Zalo 中粘贴并发送即可。", stepNo:"打开 Zalo，联系发给您此页面的人并粘贴消息。",
+ copied:"已复制。打开 Zalo 粘贴到聊天框。", copyFail:"无法自动复制。消息已选中，请长按并选择“复制”。",
+ advisor:"顾问", onDuty:"在线", msgZalo:"Zalo 联系", zOk:"房源信息已复制。在 Zalo 中长按输入框 → 粘贴 → 发送。", zFail:"Zalo 正在打开。请返回点击“复制消息”，再粘贴到 Zalo。",
+ free:"有空", booked:"已订", days:["周日","周一","周二","周三","周四","周五","周六"], back:"返回", backAria:"返回房源列表", fNight:"每晚价格", fWeekend:"周末（周五至周六）", fMonth:"月租", fArea:"面积", fMax:"最多入住", guests:"{g} 人", fView:"景观",
+ about:"介绍", amen:"房内设施", around:"小区及周边", cal14:"未来14天空房", calNote:"绿色为有空，划线为已订。预订前请发消息确认。", msgHost:"发给我们的消息", contactZ:"通过 Zalo 咨询", addList:"加入清单", backOther:"返回查看其他房源",
+ dtCopHas:"已复制。点击下方“Zalo 联系”并粘贴。", dtCopNo:"已复制。打开 Zalo 粘贴给发给您此页面的人。", prev:"上一张", next:"下一张", dtAria:"房源详情", other:"其他", priceBy:"计价方式", maxPrice:"最高价格", ciA:"入住日期", coA:"退房日期",
+ m1:"[房源] 咨询 {c}", mPrice:"• 价格：", mDates:"入住日期：", mGuests:"人数：", mView:"查看：", mAsk1:"请告诉我是否有空房以及什么时候可以看房。", mMulti:"[房源] 咨询 Vinhomes Grand Park 的 {n} 套公寓：", mAskN:"请告诉我哪些有空房以及什么时候可以看房。", night:"/晚", month:"/月"},
+ru:{title:"Апартаменты Vinhomes Grand Park", lede:"Посуточная и помесячная аренда апартаментов в районе Тхудык, Хошимин. Фильтруйте по комплексу, числу спален, цене и датам, нажмите на фото, чтобы посмотреть все снимки, выберите понравившиеся варианты и отправьте их нам в Zalo, чтобы уточнить наличие и договориться о просмотре.",
+ zoneL:"Комплекс", bedL:"Спальни", priceL:"Цена", byNight:"За ночь", byMonth:"За месяц", datesL:"Даты", search:"Поиск по номеру, напр. GH6", reset:"Сбросить", all:"Все", anyPrice:"Любая цена", under:"до {x}",
+ empty:"Нет подходящих вариантов. Уберите часть фильтров или измените даты.", result:"{n}/{t} апартаментов", resultDates:" свободны на ваши даты",
+ sApt:"апартаментов", sZone:"комплексов", sFree:"свободны сегодня", sPh:"реальных фото", foot:"Цены и наличие обновлены {t}. Цены могут меняться в зависимости от сезона, пожалуйста, уточняйте в сообщении.",
+ stRange:"Свободно {a} → {b}", stBusySel:"Занято на ваши даты", stTonight:"Свободно сегодня", stFrom:"Свободно с {d}", stOcc:"Занято",
+ phAlt:"Фото {c}", apt:"Апартаменты", phSoon:"Фото скоро появятся", nPh:"{n} фото", maxG:" · до {g} гостей", ask:"По запросу", perNight:"за ночь", perMonth:"за месяц", details:"Подробнее", picked:"✓ Выбрано", pick:"Выбрать",
+ traySel:"выбрано", sendZalo:"Отправить в Zalo", clearSel:"Очистить", sendT:"Отправьте понравившиеся варианты", step1:"Нажмите <b>Копировать сообщение</b>.", step3:"Мы подтвердим наличие и договоримся о просмотре.", msgL:"Сообщение", copy:"Копировать сообщение", openZalo:"Открыть Zalo", close:"Закрыть",
+ stepHas:"Нажмите «Написать в Zalo» рядом с менеджером. Данные об апартаментах уже скопированы, просто вставьте и отправьте в Zalo.", stepNo:"Откройте Zalo, напишите человеку, который прислал вам эту страницу, и вставьте сообщение.",
+ copied:"Скопировано. Откройте Zalo и вставьте в чат.", copyFail:"Не удалось скопировать автоматически. Сообщение выделено, нажмите и удерживайте, затем выберите «Копировать».",
+ advisor:"Менеджер", onDuty:"На связи", msgZalo:"Написать в Zalo", zOk:"Данные скопированы. В Zalo нажмите и удерживайте поле ввода → Вставить → Отправить.", zFail:"Zalo открывается. Вернитесь, нажмите «Копировать сообщение» и вставьте его в Zalo.",
+ free:"Свободно", booked:"Занято", days:["Вс","Пн","Вт","Ср","Чт","Пт","Сб"], back:"Назад", backAria:"Назад к списку", fNight:"За ночь", fWeekend:"Выходные (пт–сб)", fMonth:"Аренда в месяц", fArea:"Площадь", fMax:"Макс. гостей", guests:"{g} гостей", fView:"Вид",
+ about:"Описание", amen:"В апартаментах", around:"В комплексе и рядом", cal14:"Наличие на 14 дней", calNote:"Зелёный — свободно, зачёркнуто — занято. Перед бронированием уточните в сообщении.", msgHost:"Сообщение для нас", contactZ:"Связаться в Zalo", addList:"Добавить в список", backOther:"Смотреть другие варианты",
+ dtCopHas:"Скопировано. Нажмите «Написать в Zalo» ниже и вставьте.", dtCopNo:"Скопировано. Откройте Zalo и вставьте сообщение человеку, который прислал эту страницу.", prev:"Предыдущее фото", next:"Следующее фото", dtAria:"Подробности", other:"Другое", priceBy:"Цена за", maxPrice:"Максимальная цена", ciA:"Заезд", coA:"Выезд",
+ m1:"[Апартаменты] Запрос по {c}", mPrice:"• Цена: ", mDates:"Даты: ", mGuests:"Гостей: ", mView:"Смотреть: ", mAsk1:"Подскажите, пожалуйста, свободно ли и когда можно посмотреть?", mMulti:"[Апартаменты] Запрос по {n} вариантам в Vinhomes Grand Park:", mAskN:"Подскажите, пожалуйста, какие свободны и когда можно посмотреть?", night:"/ночь", month:"/мес."},
+ko:{title:"빈홈 그랜드 파크 아파트", lede:"호치민시 투득의 단기 및 월세 아파트입니다. 단지, 방 개수, 가격, 날짜로 필터링하고 사진을 눌러 전체 사진을 확인하세요. 마음에 드는 집을 골라 Zalo로 보내주시면 입주 가능 여부를 확인하고 방문 일정을 잡아드립니다.",
+ zoneL:"단지", bedL:"방", priceL:"가격", byNight:"1박 기준", byMonth:"월 기준", datesL:"날짜", search:"호수 검색, 예: GH6", reset:"필터 초기화", all:"전체", anyPrice:"모든 가격", under:"{x} 이하",
+ empty:"조건에 맞는 집이 없습니다. 필터를 줄이거나 날짜를 바꿔 보세요.", result:"{n}/{t}채", resultDates:" (선택한 날짜에 가능)",
+ sApt:"채", sZone:"개 단지", sFree:"채 오늘 밤 가능", sPh:"장 실제 사진", foot:"가격 및 예약 현황 업데이트: {t}. 가격은 시즌에 따라 달라질 수 있으니 메시지로 확인해 주세요.",
+ stRange:"{a} → {b} 가능", stBusySel:"선택한 날짜 예약됨", stTonight:"오늘 밤 가능", stFrom:"{d}부터 가능", stOcc:"입주 중",
+ phAlt:"{c} 사진", apt:"아파트", phSoon:"사진 준비 중", nPh:"사진 {n}장", maxG:" · 최대 {g}명", ask:"문의", perNight:"1박", perMonth:"월", details:"자세히 보기", picked:"✓ 선택됨", pick:"선택",
+ traySel:"채 선택됨", sendZalo:"Zalo로 보내기", clearSel:"선택 해제", sendT:"관심 있는 집 보내기", step1:"<b>메시지 복사</b>를 누르세요.", step3:"입주 가능 여부를 확인하고 방문 일정을 잡아드립니다.", msgL:"메시지", copy:"메시지 복사", openZalo:"Zalo 열기", close:"닫기",
+ stepHas:"상담원 옆의 'Zalo 메시지'를 누르세요. 집 정보가 자동으로 복사되어 Zalo에서 붙여넣고 보내기만 하면 됩니다.", stepNo:"Zalo를 열고 이 페이지를 보낸 분에게 메시지를 붙여넣어 보내세요.",
+ copied:"복사되었습니다. Zalo를 열고 채팅창에 붙여넣으세요.", copyFail:"자동 복사가 되지 않았습니다. 메시지가 선택되어 있으니 길게 눌러 '복사'를 선택하세요.",
+ advisor:"상담원", onDuty:"상담 중", msgZalo:"Zalo 메시지", zOk:"집 정보가 복사되었습니다. Zalo에서 입력창을 길게 눌러 → 붙여넣기 → 보내기.", zFail:"Zalo가 열리는 중입니다. 돌아와서 '메시지 복사'를 누른 뒤 Zalo에 붙여넣으세요.",
+ free:"가능", booked:"예약됨", days:["일","월","화","수","목","금","토"], back:"뒤로", backAria:"목록으로 돌아가기", fNight:"1박 요금", fWeekend:"주말 (금–토)", fMonth:"월세", fArea:"면적", fMax:"최대 인원", guests:"{g}명", fView:"전망",
+ about:"소개", amen:"집 내부 시설", around:"단지 및 주변 시설", cal14:"앞으로 14일 예약 현황", calNote:"초록색은 가능, 줄이 그어진 날은 예약됨입니다. 예약 전 메시지로 확인해 주세요.", msgHost:"보낼 메시지", contactZ:"Zalo로 문의하기", addList:"목록에 추가", backOther:"다른 집 보기",
+ dtCopHas:"복사되었습니다. 아래 'Zalo 메시지'를 눌러 붙여넣으세요.", dtCopNo:"복사되었습니다. Zalo를 열고 이 페이지를 보낸 분에게 붙여넣으세요.", prev:"이전 사진", next:"다음 사진", dtAria:"집 상세 정보", other:"기타", priceBy:"가격 기준", maxPrice:"최대 가격", ciA:"체크인", coA:"체크아웃",
+ m1:"[아파트] {c} 문의", mPrice:"• 가격: ", mDates:"날짜: ", mGuests:"인원: ", mView:"보기: ", mAsk1:"입주 가능한지, 언제 방문할 수 있는지 알려주세요.", mMulti:"[아파트] 빈홈 그랜드 파크 {n}채 문의:", mAskN:"어느 집이 가능한지, 언제 방문할 수 있는지 알려주세요.", night:"/박", month:"/월"},
+ja:{title:"ビンホームズ・グランドパーク 物件一覧", lede:"ホーチミン市トゥードゥックの短期・月単位の賃貸アパートです。エリア、間取り、価格、日程で絞り込み、写真をタップするとすべての写真が見られます。気になる物件を選んでZaloで送っていただければ、空室確認と内見の手配をいたします。",
+ zoneL:"エリア", bedL:"間取り", priceL:"価格", byNight:"1泊あたり", byMonth:"1か月あたり", datesL:"日程", search:"部屋番号で検索（例：GH6）", reset:"条件をクリア", all:"すべて", anyPrice:"価格指定なし", under:"{x}以下",
+ empty:"条件に合う物件がありません。条件を減らすか日程を変更してください。", result:"{n}/{t}件", resultDates:"（選択した日程で空室）",
+ sApt:"件の物件", sZone:"エリア", sFree:"件 今夜空室", sPh:"枚の実物写真", foot:"価格と空室状況は {t} 時点の情報です。価格は時期により変わることがありますので、メッセージでご確認ください。",
+ stRange:"{a} → {b} 空室", stBusySel:"選択した日程は満室", stTonight:"今夜空室", stFrom:"{d}から空室", stOcc:"入居中",
+ phAlt:"{c} の写真", apt:"アパート", phSoon:"写真準備中", nPh:"写真{n}枚", maxG:" · 最大{g}名", ask:"お問い合わせ", perNight:"1泊", perMonth:"1か月", details:"詳細を見る", picked:"✓ 選択済み", pick:"選択",
+ traySel:"件選択中", sendZalo:"Zaloで送る", clearSel:"選択解除", sendT:"気になる物件を送る", step1:"<b>メッセージをコピー</b>をタップします。", step3:"空室を確認し、内見の日程をご案内します。", msgL:"メッセージ", copy:"メッセージをコピー", openZalo:"Zaloを開く", close:"閉じる",
+ stepHas:"担当者の横にある「Zaloで連絡」をタップしてください。物件情報は自動でコピーされるので、Zaloで貼り付けて送信するだけです。", stepNo:"Zaloを開き、このページを送ってくれた方にメッセージを貼り付けて送信してください。",
+ copied:"コピーしました。Zaloを開いてチャットに貼り付けてください。", copyFail:"自動でコピーできませんでした。メッセージが選択されているので、長押しして「コピー」を選んでください。",
+ advisor:"担当者", onDuty:"対応中", msgZalo:"Zaloで連絡", zOk:"物件情報をコピーしました。Zaloで入力欄を長押し → 貼り付け → 送信。", zFail:"Zaloを開いています。戻って「メッセージをコピー」をタップし、Zaloに貼り付けてください。",
+ free:"空室", booked:"予約済み", days:["日","月","火","水","木","金","土"], back:"戻る", backAria:"一覧に戻る", fNight:"1泊料金", fWeekend:"週末（金・土）", fMonth:"月額家賃", fArea:"広さ", fMax:"最大人数", guests:"{g}名", fView:"眺望",
+ about:"物件紹介", amen:"室内設備", around:"共用施設・周辺", cal14:"今後14日間の空室状況", calNote:"緑は空室、取り消し線は予約済みです。ご予約前にメッセージでご確認ください。", msgHost:"送信メッセージ", contactZ:"Zaloでお問い合わせ", addList:"リストに追加", backOther:"ほかの物件を見る",
+ dtCopHas:"コピーしました。下の「Zaloで連絡」をタップして貼り付けてください。", dtCopNo:"コピーしました。Zaloを開き、このページを送ってくれた方に貼り付けてください。", prev:"前の写真", next:"次の写真", dtAria:"物件の詳細", other:"その他", priceBy:"料金単位", maxPrice:"上限価格", ciA:"チェックイン", coA:"チェックアウト",
+ m1:"[物件] {c} のお問い合わせ", mPrice:"• 価格：", mDates:"日程：", mGuests:"人数：", mView:"詳細：", mAsk1:"空室状況と内見可能な日時を教えてください。", mMulti:"[物件] ビンホームズ・グランドパーク {n}件のお問い合わせ：", mAskN:"どの物件が空いているか、内見可能な日時を教えてください。", night:"/泊", month:"/月"}
+
+};
+
+let LANG = (()=>{ try { const s = localStorage.getItem("qc.lang"); if (I18[s]) return s; } catch(e){} const n = (navigator.language||"vi").toLowerCase(); const two = n.slice(0,2); return ["vi","zh","ru","ko","ja"].includes(two) ? two : "en"; })();
+const T = (k, o) => { let x = (I18[LANG]||I18.vi)[k]; if (x==null) x = I18.vi[k]; if (o && typeof x==="string") for (const [a,b] of Object.entries(o)) x = x.split("{"+a+"}").join(b); return x; };
+const L = s => { if (!s || LANG==="vi") return s; const t = (DATA.i18n||{})[s]; return (t && t[LANG]) || s; };
+const typeL = t => { t = String(t||""); if (LANG==="vi") return t; const m = t.match(/^(\d)\s*PN(\+?)$/i);
+  if (m){ const n = +m[1], p = m[2];
+    if (LANG==="zh") return ["","一","两","三","四","五"][n]+"室"+(p?"+":"");
+    if (LANG==="ru") return n+(n===1?" спальня":n<5?" спальни":" спален")+p;
+    if (LANG==="ko") return "방 "+n+"개"+p;
+    if (LANG==="ja") return n+"LDK"+p;
+    return n+"BR"+p; }
+  if (/studio/i.test(t)) return {zh:"开间",ru:"Студия",ko:"원룸",ja:"ワンルーム"}[LANG] || "Studio"; return t; };
+const zoneL = z => z==="Khác" ? T("other") : z;
+// Kênh nhắn thêm (WhatsApp, WeChat) theo tên người tư vấn trong danh bạ
+const CH = {"Duy":{wl:"https://u.wechat.com/kOg8bcZPmnstpzafLsPCiBw?s=2", wa:"84365329311", wc:"qr/wechat_duy.png"}, "Oanh":{wl:"https://u.wechat.com/kNGbBtlqHu-iFBNtEvLptQE?s=2", wa:"84985518997", wc:"qr/wechat_oanh.png"}, "Hieu":{wl:"https://u.wechat.com/kBjM8h6EGbm_VtujFYhyIUI", wa:"84983060001", wc:"qr/wechat_hieu.png"}};
+Object.assign(I18.vi,{wcOpen:"Đã kết bạn? Mở WeChat", wcS3:"Đã kết bạn rồi: mở app WeChat, vào cuộc trò chuyện với {n}, bấm giữ ô chat → Dán → Gửi.", stepHas:"Bấm Zalo, WhatsApp hoặc WeChat cạnh tên người tư vấn. Thông tin căn được chép sẵn, vào app chỉ cần bấm giữ ô chat → Dán → Gửi.", zOk:"Đã chép thông tin căn. Trong app chat, bấm giữ ô chat → Dán → Gửi.", zFail:"App chat đang mở. Nếu chưa dán được, quay lại bấm “Chép tin nhắn” rồi dán.", dtCopHas:"Đã chép. Bấm Zalo, WhatsApp hoặc WeChat cạnh tên người tư vấn rồi dán tin nhắn.", sendZalo:"Gửi cho tư vấn", contactZ:"Liên hệ tư vấn", msgWa:"WhatsApp", msgWc:"WeChat", wcT:"Kết bạn WeChat với {n}", wcS1:"Thông tin căn đã được chép sẵn.", wcS2:"Quét mã bằng WeChat. Nếu đang xem trên cùng điện thoại: bấm giữ mã để lưu ảnh, rồi vào WeChat → Quét → chọn ảnh. Kết bạn xong, dán tin nhắn rồi gửi."});
+Object.assign(I18.en,{wcOpen:"Already friends? Open WeChat", wcS3:"Already friends: open the WeChat app, go to your chat with {n}, long-press the chat box → Paste → Send.", stepHas:"Tap Zalo, WhatsApp or WeChat next to an advisor's name. The apartment details are copied for you: in the app, long-press the chat box → Paste → Send.", zOk:"Apartment details copied. In the chat app, long-press the chat box → Paste → Send.", zFail:"The chat app is opening. If nothing pastes, come back, tap “Copy message” and paste it.", dtCopHas:"Copied. Tap Zalo, WhatsApp or WeChat next to an advisor's name and paste.", sendZalo:"Send to an advisor", contactZ:"Contact us", msgWa:"WhatsApp", msgWc:"WeChat", wcT:"Add {n} on WeChat", wcS1:"The apartment details are copied.", wcS2:"Scan this code in WeChat. On the same phone: long-press the code to save it, then WeChat → Scan → Album. Once added, paste the message and send."});
+Object.assign(I18.zh,{wcOpen:"已是好友？打开微信", wcS3:"已是好友：打开微信，进入与 {n} 的聊天，长按输入框 → 粘贴 → 发送。", stepHas:"点击顾问名字旁的 Zalo、WhatsApp 或微信。房源信息已自动复制，在应用中长按输入框 → 粘贴 → 发送。", zOk:"房源信息已复制。在聊天应用中长按输入框 → 粘贴 → 发送。", zFail:"聊天应用正在打开。如无法粘贴，请返回点击“复制消息”后再粘贴。", dtCopHas:"已复制。点击顾问名字旁的 Zalo、WhatsApp 或微信，然后粘贴。", sendZalo:"发送给顾问", contactZ:"联系顾问", msgWa:"WhatsApp", msgWc:"微信", wcT:"添加 {n} 为微信好友", wcS1:"房源信息已复制。", wcS2:"请用微信扫描此二维码。若在同一部手机上：长按二维码保存图片，再打开微信 → 扫一扫 → 相册。添加好友后粘贴消息并发送。"});
+Object.assign(I18.ru,{wcOpen:"Уже в друзьях? Открыть WeChat", wcS3:"Уже в друзьях: откройте приложение WeChat, перейдите в чат с {n}, удерживайте поле ввода → Вставить → Отправить.", stepHas:"Нажмите Zalo, WhatsApp или WeChat рядом с именем менеджера. Данные квартиры уже скопированы: в приложении удерживайте поле ввода → Вставить → Отправить.", zOk:"Данные скопированы. В мессенджере удерживайте поле ввода → Вставить → Отправить.", zFail:"Мессенджер открывается. Если вставить не получилось, вернитесь, нажмите «Копировать сообщение» и вставьте.", dtCopHas:"Скопировано. Нажмите Zalo, WhatsApp или WeChat рядом с именем менеджера и вставьте.", sendZalo:"Отправить менеджеру", contactZ:"Связаться с нами", msgWa:"WhatsApp", msgWc:"WeChat", wcT:"Добавить {n} в WeChat", wcS1:"Данные квартиры скопированы.", wcS2:"Отсканируйте код в WeChat. На том же телефоне: удерживайте код, чтобы сохранить изображение, затем WeChat → Сканировать → Альбом. После добавления вставьте сообщение и отправьте."});
+Object.assign(I18.ko,{wcOpen:"이미 친구인가요? 위챗 열기", wcS3:"이미 친구라면: 위챗 앱을 열고 {n}님과의 채팅에서 입력창을 길게 눌러 → 붙여넣기 → 보내기.", stepHas:"상담원 이름 옆의 Zalo, WhatsApp 또는 위챗을 누르세요. 집 정보가 자동으로 복사되어 있으니 앱에서 입력창을 길게 눌러 → 붙여넣기 → 보내기.", zOk:"집 정보가 복사되었습니다. 채팅 앱에서 입력창을 길게 눌러 → 붙여넣기 → 보내기.", zFail:"채팅 앱이 열리는 중입니다. 붙여넣기가 안 되면 돌아와서 '메시지 복사'를 누른 뒤 붙여넣으세요.", dtCopHas:"복사되었습니다. 상담원 이름 옆의 Zalo, WhatsApp 또는 위챗을 눌러 붙여넣으세요.", sendZalo:"상담원에게 보내기", contactZ:"상담 문의", msgWa:"WhatsApp", msgWc:"위챗", wcT:"위챗에서 {n} 친구 추가", wcS1:"집 정보가 복사되었습니다.", wcS2:"위챗으로 이 코드를 스캔하세요. 같은 휴대폰이라면 코드를 길게 눌러 이미지를 저장한 뒤 위챗 → 스캔 → 앨범을 선택하세요. 친구 추가 후 메시지를 붙여넣어 보내세요."});
+Object.assign(I18.ja,{wcOpen:"友だち追加済み？WeChatを開く", wcS3:"すでに友だちの場合：WeChatアプリを開き、{n}とのチャットで入力欄を長押し → 貼り付け → 送信。", stepHas:"担当者名の横の Zalo・WhatsApp・WeChat をタップしてください。物件情報は自動でコピーされます。アプリで入力欄を長押し → 貼り付け → 送信。", zOk:"物件情報をコピーしました。チャットアプリで入力欄を長押し → 貼り付け → 送信。", zFail:"チャットアプリを開いています。貼り付けできない場合は、戻って「メッセージをコピー」をタップしてから貼り付けてください。", dtCopHas:"コピーしました。担当者名の横の Zalo・WhatsApp・WeChat をタップして貼り付けてください。", sendZalo:"担当者に送る", contactZ:"お問い合わせ", msgWa:"WhatsApp", msgWc:"WeChat", wcT:"WeChatで{n}を追加", wcS1:"物件情報をコピーしました。", wcS2:"WeChatでこのコードをスキャンしてください。同じスマホの場合は、コードを長押しして画像を保存し、WeChat → スキャン → アルバムを選択。追加後、メッセージを貼り付けて送信してください。"});
+function copyFrom(m){ let sync=false; try { m.focus({preventScroll:true}); m.select(); m.setSelectionRange(0, m.value.length); sync = document.execCommand("copy"); window.getSelection && window.getSelection().removeAllRanges(); m.blur(); } catch(err){} try { navigator.clipboard.writeText(m.value).catch(()=>{}); } catch(err){} return sync; }
+const LANGS = [["vi","Tiếng Việt"],["en","English"],["zh","中文"],["ru","Русский"],["ko","한국어"],["ja","日本語"]];
+const GLOBE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/></svg>`;
+const langHtml = () => { const cur = (LANGS.find(x=>x[0]===LANG)||LANGS[0])[1];
+  return `<div class="lgw"><button type="button" class="lgbtn" aria-haspopup="listbox" aria-expanded="false" aria-label="Language">${GLOBE}<span>${cur}</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+    <div class="lgmenu" role="listbox" aria-label="Language" hidden><div class="lghd">Language</div>${LANGS.map(([k,l])=>`<button type="button" role="option" data-lang="${k}" lang="${k}" aria-selected="${LANG===k}">${l}${LANG===k?`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>`:""}</button>`).join("")}</div></div>`; };
+const closeLang = ()=>document.querySelectorAll(".lgmenu").forEach(m=>{ m.hidden = true; const b = m.previousElementSibling; if (b) b.setAttribute("aria-expanded","false"); });
+document.addEventListener("click", e=>{ const b = e.target.closest(".lgbtn");
+  if (b){ const m = b.nextElementSibling, open = m.hidden; closeLang(); if (open){ m.hidden = false; b.setAttribute("aria-expanded","true"); } e.stopPropagation(); return; }
+  if (!e.target.closest(".lgmenu")) closeLang(); }, true);
+document.addEventListener("keydown", e=>{ if (e.key==="Escape") closeLang(); });
+function applyStatic(){
+  document.documentElement.lang = LANG==="zh" ? "zh-CN" : LANG;
+  document.querySelectorAll("[data-t]").forEach(el=>{ el.textContent = T(el.dataset.t); });
+  document.querySelectorAll("[data-th]").forEach(el=>{ el.innerHTML = T(el.dataset.th); });
+  document.querySelectorAll("[data-tp]").forEach(el=>{ el.placeholder = T(el.dataset.tp); });
+  document.querySelectorAll("[data-ta]").forEach(el=>{ el.setAttribute("aria-label", T(el.dataset.ta)); });
+  if (!document.body.classList.contains("solo")) document.title = T("title");
+  const lt = document.getElementById("langTop"); if (lt) lt.innerHTML = langHtml();
+}
+document.addEventListener("click", e=>{ const b = e.target.closest("[data-lang]"); if (!b) return; closeLang(); LANG = b.dataset.lang; try { localStorage.setItem("qc.lang", LANG); } catch(err){} applyStatic(); stats(); draw(); if (DT){ const id = DT.u.id, i = DT.i; openDetail(id); } });
+const $ = id => document.getElementById(id);
+const PAGE = "https://bnbvin.com/";
+const pad = n => String(n).padStart(2,"0");
+const iso = d => d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const now = new Date(Date.now()+ (new Date().getTimezoneOffset()+420)*60000);
+const TODAY = iso(now);
+const addDays = (s,n)=>{ const d=new Date(s+"T00:00:00"); d.setDate(d.getDate()+n); return iso(d); };
+const fmtD = s => s ? s.slice(8,10)+"/"+s.slice(5,7) : "";
+const vnd = n => n ? (LANG==="vi" ? n.toLocaleString("vi-VN")+"đ" : LANG==="ru" ? n.toLocaleString("ru-RU")+" ₫" : n.toLocaleString("en-US")+" ₫") : T("ask");
+const MAN = {zh:"万",ja:"万",ko:"만"};
+const tr = n => !n ? T("ask") : LANG==="vi" ? (n/1e6).toLocaleString("vi-VN",{maximumFractionDigits:1})+" tr" : MAN[LANG] ? (n/1e4).toLocaleString("en-US",{maximumFractionDigits:0})+MAN[LANG]+"₫" : LANG==="ru" ? (n/1e6).toLocaleString("ru-RU",{maximumFractionDigits:1})+" млн ₫" : (n/1e6).toLocaleString("en-US",{maximumFractionDigits:1})+"M ₫";
+const shortP = n => LANG==="vi" ? (n<1e6 ? n/1e3+"k" : (n/1e6).toLocaleString("vi-VN")+" tr") : MAN[LANG] ? (n/1e4).toLocaleString("en-US")+MAN[LANG]+"₫" : LANG==="ru" ? (n<1e6 ? n/1e3+" тыс. ₫" : (n/1e6).toLocaleString("ru-RU")+" млн ₫") : (n<1e6 ? n/1e3+"k ₫" : (n/1e6)+"M ₫");
+const esc = s => String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+const bed = t => { t=String(t||"").toLowerCase(); if (/stu/.test(t)) return 0; const m=t.match(/(\d)/); return m?+m[1]:null; };
+const ZORDER = ["Glory Heights","The Beverly","The Beverly Solari","The Origami","The Rainbow","The Opus One","Masteri Centre Point","Khác"];
+const units = DATA.units.filter(u=>u.p||u.m);
+const busyOf = id => DATA.busy[id] || [];
+const isFree = (id, ci, co) => !busyOf(id).some(([a,b]) => a < co && ci < b);
+const F = {zone:"", bed:"", unit:"night", max:"", ci:"", co:"", q:""};
+let picked = new Set();
+try { const s = JSON.parse(localStorage.getItem("qc.pick")||"[]"); s.forEach(x=>picked.add(x)); } catch(e){}
+const savePick = ()=>{ try { localStorage.setItem("qc.pick", JSON.stringify([...picked])); } catch(e){} };
+
+function chips(el, items, key){
+  el.innerHTML = items.map(([v,l])=>`<button type="button" class="chip" data-v="${esc(v)}" aria-pressed="${F[key]===v}">${esc(l)}</button>`).join("");
+  el.onclick = e=>{ const b=e.target.closest("[data-v]"); if(!b) return; F[key] = F[key]===b.dataset.v && b.dataset.v ? "" : b.dataset.v; draw(); };
+}
+function maxOpts(){
+  const o = [["",T("anyPrice")], ...(F.unit==="night" ? [700000,900000,1200000,2000000] : [13000000,15000000,18000000,25000000,30000000]).map(n=>[String(n), T("under",{x:shortP(n)})])];
+  $("fMax").innerHTML = o.map(([v,l])=>`<option value="${v}" ${F.max===v?"selected":""}>${l}</option>`).join("");
+}
+function filtered(){
+  const q = F.q.trim().toLowerCase().replace(/\s+/g,"");
+  const ci = F.ci, co = F.co && F.co>F.ci ? F.co : (F.ci ? addDays(F.ci,1) : "");
+  return units.filter(u=>{
+    if (F.zone && u.z!==F.zone) return false;
+    if (F.bed!=="" && String(bed(u.t))!==F.bed) return false;
+    const pr = F.unit==="night" ? u.p : u.m;
+    if (F.max && (!pr || pr > +F.max)) return false;
+    if (q && !u.c.toLowerCase().replace(/\s+/g,"").includes(q)) return false;
+    if (ci && !isFree(u.id, ci, co)) return false;
+    return true;
+  }).sort((a,b)=>(b.ph.length>0)-(a.ph.length>0) || ZORDER.indexOf(a.z)-ZORDER.indexOf(b.z) || a.c.localeCompare(b.c));
+}
+function status(u){
+  if (F.ci){ const co = F.co && F.co>F.ci ? F.co : addDays(F.ci,1); return isFree(u.id,F.ci,co) ? ["free",T("stRange",{a:fmtD(F.ci),b:fmtD(co)})] : ["busy",T("stBusySel")]; }
+  if (isFree(u.id, TODAY, addDays(TODAY,1))) return ["free",T("stTonight")];
+  const nb = busyOf(u.id).filter(([a,b])=>b>TODAY).sort((x,y)=>x[1].localeCompare(y[1]))[0];
+  return ["busy", nb ? T("stFrom",{d:fmtD(nb[1])}) : T("stOcc")];
+}
+function card(u){
+  const c = u.ph[0], [sc, st] = status(u), sel = picked.has(u.id);
+  return `<article class="card${sel?" sel":""}" data-u="${u.id}" style="cursor:pointer">
+    <div class="pic" ${c?`data-g="${u.id}" data-i="0"`:""}>${c?`<img src="${esc(c)}" alt="${esc(T("phAlt",{c:u.c}))}" loading="lazy">`:`<div class="nopic"><b>${esc(typeL(u.t)||T("apt"))}</b><span>${esc(T("phSoon"))}</span></div>`}
+      <span class="st ${sc}">${esc(st)}</span>${u.ph.length?`<span class="cnt">${esc(T("nPh",{n:u.ph.length}))}</span>`:""}</div>
+    <div class="body">
+      <div class="top"><span class="code">${esc(u.c)}</span><span class="type">${esc(typeL(u.t))}</span></div>
+      <div class="zone">${esc(zoneL(u.z))}${u.g?esc(T("maxG",{g:u.g})):""}</div>
+      <div class="prices"><div><b>${vnd(u.p)}</b><span>${T("perNight")}</span></div><div><b>${tr(u.m)}</b><span>${T("perMonth")}</span></div></div>
+      ${u.ph.length>1?`<div class="strip">${u.ph.slice(1,5).map((p,i)=>`<img src="${esc(p)}" alt="" loading="lazy" data-g="${u.id}" data-i="${i+1}">`).join("")}</div>`:""}
+      <div class="pick" style="display:flex;gap:6px"><button type="button" class="more" style="flex:1">${T("details")}</button><button type="button" data-p="${u.id}" aria-pressed="${sel}" style="flex:1">${sel?T("picked"):T("pick")}</button></div>
+    </div></article>`;
+}
+function draw(){
+  chips($("fZone"), [["",T("all")], ...ZORDER.filter(z=>units.some(u=>u.z===z)).map(z=>[z,zoneL(z)])], "zone");
+  chips($("fBed"), [["",T("all")], ...[0,1,2,3,4].filter(b=>units.some(u=>bed(u.t)===b)).map(b=>[String(b), b===0?typeL("Studio"):typeL(b+"PN")])], "bed");
+  maxOpts();
+  const list = filtered();
+  $("grid").innerHTML = list.map(card).join("") || `<div class="empty">${esc(T("empty"))}</div>`;
+  $("result").textContent = T("result",{n:list.length,t:units.length}) + (F.ci ? T("resultDates") : "");
+  $("trayN").textContent = picked.size; $("tray").hidden = !picked.size;
+}
+function stats(){
+  const zones = new Set(units.map(u=>u.z)).size, ph = units.reduce((a,u)=>a+u.ph.length,0);
+  const free = units.filter(u=>isFree(u.id,TODAY,addDays(TODAY,1))).length;
+  $("stats").innerHTML = `<div><b>${units.length}</b> <span>${T("sApt")}</span></div><div><b>${zones}</b> <span>${T("sZone")}</span></div><div><b>${free}</b> <span>${T("sFree")}</span></div>${ph?`<div><b>${ph}</b> <span>${T("sPh")}</span></div>`:""}`;
+  $("foot").textContent = T("foot",{t:DATA.updated.replace("T"," ")});
+}
+// events
+$("grid").addEventListener("click", e=>{
+  const p = e.target.closest("[data-p]"); if (p){ const id=p.dataset.p; picked.has(id)?picked.delete(id):picked.add(id); savePick(); draw(); return; }
+  const g = e.target.closest("[data-g]"); if (g && g.closest(".strip")){ const u=units.find(x=>x.id===g.dataset.g); if (u&&u.ph.length) openLB(u, +g.dataset.i||0); return; }
+  const c = e.target.closest(".card"); if (c && c.dataset.u) openDetail(c.dataset.u);
+});
+$("fUnit").onchange = e=>{ F.unit=e.target.value; F.max=""; draw(); };
+$("fMax").onchange = e=>{ F.max=e.target.value; draw(); };
+$("fIn").min = TODAY; $("fOut").min = TODAY;
+$("fIn").onchange = e=>{ F.ci=e.target.value; if (F.co && F.co<=F.ci){ F.co=""; $("fOut").value=""; } $("fOut").min = F.ci||TODAY; draw(); };
+$("fOut").onchange = e=>{ F.co=e.target.value; draw(); };
+$("fQ").oninput = e=>{ F.q=e.target.value; draw(); };
+$("fReset").onclick = ()=>{ Object.assign(F,{zone:"",bed:"",max:"",ci:"",co:"",q:""}); $("fIn").value=""; $("fOut").value=""; $("fQ").value=""; draw(); };
+$("trayClear").onclick = ()=>{ picked.clear(); savePick(); draw(); };
+function message(){
+  const L = [...picked].map(id=>units.find(u=>u.id===id)).filter(Boolean);
+  const dates = F.ci ? `${T("mDates")}${fmtD(F.ci)} → ${fmtD(F.co && F.co>F.ci ? F.co : addDays(F.ci,1))}\n` : "";
+  return `${T("mMulti",{n:L.length})}\n${L.map((u,i)=>`${i+1}. ${u.c} (${typeL(u.t)}, ${zoneL(u.z)}) · ${u.p?vnd(u.p)+T("night"):""}${u.p&&u.m?" · ":""}${u.m?tr(u.m)+T("month"):""}\n   ${PAGE}#c-${u.id}`).join("\n")}\n${dates}${T("mGuests")}\n${T("mAskN")}`;
+}
+$("traySend").onclick = ()=>{
+  $("msg").value = message(); $("copyNote").textContent = "";
+  const C = pickContact(); const ph = (C.phone||"").replace(/\D/g,"");
+  $("contact").innerHTML = ph ? contactRows("msg","copyNote") : "";
+  $("stepZalo").textContent = ph ? T("stepHas") : T("stepNo");
+  $("openZalo").hidden = true;
+  $("sendBg").hidden = false;
+};
+$("closeSend").onclick = ()=>{ $("sendBg").hidden = true; };
+$("sendBg").onclick = e=>{ if (e.target.id==="sendBg") $("sendBg").hidden = true; };
+$("copyMsg").onclick = ()=>{
+  const t = $("msg").value;
+  const ok = ()=>{ $("copyNote").textContent = T("copied"); };
+  const fail = ()=>{ $("msg").focus(); $("msg").select(); $("copyNote").textContent = T("copyFail"); };
+  try { navigator.clipboard.writeText(t).then(ok, fail); } catch(e){ fail(); }
+};
+function pickContact(){
+  const L = DATA.contacts || [], hm = pad(now.getHours())+":"+pad(now.getMinutes());
+  const inWin = c => c.from && c.to && (c.from <= c.to ? (hm >= c.from && hm < c.to) : (hm >= c.from || hm < c.to));
+  return L.find(inWin) || L.find(c=>!c.from||!c.to) || L[0] || {};
+}
+function chBtns(c,d,msgEl,noteEl){
+  const x = CH[c.name] || {}, a = {};
+  a.z = `<a class="btn pri zbtn" href="https://zalo.me/${d}" target="_blank" rel="noopener" data-zmsg="${msgEl}" data-znote="${noteEl}">${(x.wa||x.wc)?"Zalo":T("msgZalo")}</a>`;
+  if (x.wa) a.w = `<a class="btn wabtn" href="https://wa.me/${x.wa}" target="_blank" rel="noopener" data-wa="${x.wa}" data-zmsg="${msgEl}" data-znote="${noteEl}">${T("msgWa")}</a>`;
+  if (x.wc) a.c = `<button type="button" class="btn wcbtn" data-wc="${esc(x.wc)}" data-wn="${esc(c.name||"")}" data-wl="${esc(x.wl||"")}" data-zmsg="${msgEl}" data-znote="${noteEl}">${T("msgWc")}</button>`;
+  const ord = LANG==="zh" ? ["c","z","w"] : LANG==="vi" ? ["z","w","c"] : ["w","z","c"];
+  return ord.filter(k=>a[k]).map(k=>a[k]).join("");
+}
+document.addEventListener("click", e=>{ const a = e.target.closest(".wabtn"); if (!a) return; const m = $(a.dataset.zmsg), n = $(a.dataset.znote); if (!m) return; a.href = "https://wa.me/"+a.dataset.wa+"?text="+encodeURIComponent(m.value); const ok = copyFrom(m); const t = T("zOk"); if (n) n.textContent = t; toastMsg(t); });
+document.addEventListener("click", e=>{ const b = e.target.closest(".wcbtn"); if (!b) return; const m = $(b.dataset.zmsg), n = $(b.dataset.znote); if (m) copyFrom(m); if (n) n.textContent = T("zOk");
+  let bg = $("wcBg"); if (bg) bg.remove(); bg = document.createElement("div"); bg.id="wcBg"; bg.className="sheet-bg"; bg.style.zIndex="45";
+  bg.innerHTML = `<div class="sheet" role="dialog" aria-modal="true" style="text-align:center"><h2>${esc(T("wcT",{n:b.dataset.wn}))}</h2><p style="margin:0 0 10px;color:var(--park);font-weight:600">${esc(T("wcS1"))}</p><img src="${b.dataset.wc}" alt="WeChat QR" style="width:min(260px,70vw);height:auto;border-radius:12px;border:1px solid var(--line);background:#fff"><p style="font-size:13.5px;color:var(--ink2);margin:10px auto 0;max-width:42ch">${esc(T("wcS2"))}</p><p style="font-size:13.5px;color:var(--ink2);margin:8px auto 0;max-width:42ch">${esc(T("wcS3",{n:b.dataset.wn}))}</p><div class="acts" style="justify-content:center"><a class="btn pri" id="wcOpen" href="weixin://" target="_top">${esc(T("wcOpen"))}</a><button class="btn" type="button" id="wcClose">${esc(T("close"))}</button></div></div>`;
+  document.body.appendChild(bg); bg.addEventListener("click", ev=>{ if (ev.target===bg || ev.target.id==="wcClose") bg.remove(); });
+});
+function contactRows(msgEl, noteEl){
+  const L = (DATA.contacts||[]).filter(c=>(c.phone||"").replace(/\D/g,"").length>=9); const on = pickContact();
+  if (!L.length) return "";
+  const sorted = [on, ...L.filter(c=>c!==on)].filter(Boolean);
+  return `<div class="zl">${sorted.map((c,i)=>{ const d=c.phone.replace(/\D/g,"").replace(/^84/,"0");
+    return `<div class="zrow"><div><b>${esc(c.name||T("advisor"))}</b>${c===on&&L.length>1?` <span class="ztag">${T("onDuty")}</span>`:""}<div class="zph">${esc(c.phone)}${c.from&&c.to?` · ${esc(c.from)}–${esc(c.to)}`:""}</div></div>
+      <div class="zacts">${chBtns(c,d,msgEl,noteEl)}</div></div>`; }).join("")}</div>`;
+}
+document.addEventListener("click", e=>{ const a = e.target.closest(".zbtn"); if (!a) return;
+  const m = $(a.dataset.zmsg), n = $(a.dataset.znote); if (!m) return;
+  const done = ok => { const t = ok ? T("zOk") : T("zFail"); if(n) n.textContent = t; toastMsg(t); };
+  // chép ngay trong lúc bấm (trước khi điện thoại chuyển sang app Zalo), rồi thử thêm cách mới
+  let sync = false; try { m.focus({preventScroll:true}); m.select(); m.setSelectionRange(0, m.value.length); sync = document.execCommand("copy"); window.getSelection && window.getSelection().removeAllRanges(); m.blur(); } catch(err){}
+  if (sync) done(true);
+  try { navigator.clipboard.writeText(m.value).then(()=>done(true), ()=>{ if(!sync) done(false); }); } catch(err){ if(!sync) done(false); }
+});
+function toastMsg(t){ let el = $("toast"); if (!el){ el = document.createElement("div"); el.id="toast"; el.setAttribute("role","status"); el.style.cssText="position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:50;background:var(--ink);color:var(--bg);padding:12px 16px;border-radius:12px;max-width:min(92vw,420px);font:600 14px var(--f-body);box-shadow:0 8px 24px rgba(0,0,0,.25)"; document.body.appendChild(el); }
+  el.textContent = t; el.hidden = false; clearTimeout(el._t); el._t = setTimeout(()=>{ el.hidden = true; }, 5000); }
+// chi tiết căn
+let DT = null;
+function next14(u){ const out=[]; for (let i=0;i<14;i++){ const d=addDays(TODAY,i), f=isFree(u.id,d,addDays(d,1)); out.push(`<i class="${f?"f":"b"}" title="${f?T("free"):T("booked")}">${T("days")[new Date(d+"T00:00:00").getDay()]}<br>${fmtD(d)}</i>`); } return out.join(""); }
+function unitMsg(u){ const C = pickContact(); const dates = F.ci ? `\n${T("mDates")}${fmtD(F.ci)} → ${fmtD(F.co && F.co>F.ci ? F.co : addDays(F.ci,1))}` : "\n"+T("mDates");
+  return `${T("m1",{c:u.c})}\n• ${typeL(u.t)} · ${zoneL(u.z)}${u.a?` · ${u.a} m²`:""}\n${T("mPrice")}${u.p?vnd(u.p)+T("night"):""}${u.p&&u.m?" · ":""}${u.m?tr(u.m)+T("month"):""}${dates}\n${T("mGuests")}\n${T("mView")}${PAGE}#c-${u.id}\n${T("mAsk1")}`; }
+let SOLO = false; // link “chỉ căn này”: #c-<mã>, không có danh sách và nút quay lại
+function openDetail(id){
+  const u = units.find(x=>x.id===id); if (!u) return; DT = {u, i:0};
+  const C = pickContact(), ph = (C.phone||"").replace(/\D/g,""), sel = picked.has(u.id);
+  const [sc, st] = status(u);
+  const extras = (DATA.extras||"").split(/[·,;]/).map(x=>x.trim()).filter(Boolean);
+  $("dt").innerHTML = `
+    <div class="dt-bar"><button type="button" class="solo-hide" id="dtBack" aria-label="${esc(T("backAria"))}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>${T("back")}</button><b>${esc(u.c)}</b><div class="langsw">${langHtml()}</div></div>
+    <div class="dt-hero" id="dtHero">${u.ph.length?`<img id="dtImg" src="${esc(u.ph[0])}" alt="${esc(T("phAlt",{c:u.c}))}">`:`<div class="nopic"><b>${esc(typeL(u.t))}</b><span>${esc(T("phSoon"))}</span></div>`}
+      <span class="st ${sc}">${esc(st)}</span>${u.ph.length?`<span class="cnt" id="dtCnt">1/${u.ph.length}</span>`:""}</div>
+    ${u.ph.length>1?`<div class="dt-thumbs" id="dtTh">${u.ph.map((p,i)=>`<img src="${esc(p)}" alt="${i+1}" loading="lazy" data-ti="${i}" class="${i?"":"on"}">`).join("")}</div>`:""}
+    <div class="dt-body">
+      <div class="dt-h"><div><h2>${esc(u.c)}</h2><div class="zone">${esc(zoneL(u.z))}</div></div><span class="type" style="font-size:14px">${esc(typeL(u.t))}</span></div>
+      <div class="facts">
+        <div><span>${T("fNight")}</span><b>${vnd(u.p)}</b></div>
+        ${u.we&&u.we!==u.p?`<div><span>${T("fWeekend")}</span><b>${vnd(u.we)}</b></div>`:""}
+        <div><span>${T("fMonth")}</span><b>${tr(u.m)}</b></div>
+        ${u.a?`<div><span>${T("fArea")}</span><b>${u.a} m²</b></div>`:""}
+        ${u.g?`<div><span>${T("fMax")}</span><b>${T("guests",{g:u.g})}</b></div>`:""}
+        ${u.v?`<div><span>${T("fView")}</span><b>${esc(L(u.v))}</b></div>`:""}
+      </div>
+      ${u.d?`<div><h3>${T("about")}</h3><p>${esc(L(u.d))}</p></div>`:""}
+      ${u.am.length?`<div><h3>${T("amen")}</h3><div class="tags">${u.am.map(a=>`<span>${esc(L(a))}</span>`).join("")}</div></div>`:""}
+      ${extras.length?`<div><h3>${T("around")}</h3><div class="tags">${extras.map(a=>`<span>${esc(L(a))}</span>`).join("")}</div></div>`:""}
+      <div><h3>${T("cal14")}</h3><div class="cal">${next14(u)}</div><p style="font-size:12.5px;color:var(--ink2);margin-top:6px">${T("calNote")}</p></div>
+      <div><h3>${T("msgHost")}</h3><textarea id="dtMsg" style="width:100%;min-height:120px;font:14px/1.5 var(--f-body);color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px">${esc(unitMsg(u))}</textarea><p id="dtNote" style="font-size:13.5px;color:var(--park);font-weight:600;margin-top:6px">${ph?T("stepHas"):""}</p></div>
+    </div>
+    <div class="dt-cta">
+      ${ph?`<div style="flex:1 1 100%"><div style="font-size:12px;font-weight:600;color:var(--ink2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">${T("contactZ")}</div>${contactRows("dtMsg","dtNote")}</div>`:""}
+      <button class="btn" type="button" id="dtCopy">${T("copy")}</button>
+      <button class="btn solo-hide" type="button" id="dtPick">${sel?T("picked"):T("addList")}</button>
+      <button class="btn solo-hide" type="button" id="dtBack2" style="flex:1 1 100%;display:inline-flex;justify-content:center;align-items:center;gap:6px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:18px;height:18px;vertical-align:-3px" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg> ${T("backOther")}</button>
+    </div>`;
+  $("dtBg").hidden = false; document.body.style.overflow = "hidden";
+  const show = i=>{ DT.i=i; const im=$("dtImg"); if(im) im.src=u.ph[i]; const cn=$("dtCnt"); if(cn) cn.textContent=(i+1)+"/"+u.ph.length; document.querySelectorAll("#dtTh img").forEach(x=>x.classList.toggle("on", +x.dataset.ti===i)); };
+  const th = $("dtTh"); if (th) th.onclick = e=>{ const t=e.target.closest("[data-ti]"); if(t) show(+t.dataset.ti); };
+  const hero = $("dtHero"); hero.onclick = ()=>{ if (u.ph.length) openLB(u, DT.i); };
+  $("dtBack").onclick = closeDetail; $("dtBack2").onclick = closeDetail;
+  $("dt").scrollTop = 0;
+  if (!SOLO && location.hash !== "#"+u.id){ try { history.pushState({dt:u.id}, "", "#"+u.id); } catch(e){} }
+  $("dtPick").onclick = ()=>{ picked.has(u.id)?picked.delete(u.id):picked.add(u.id); savePick(); draw(); $("dtPick").textContent = picked.has(u.id)?T("picked"):T("addList"); };
+  $("dtCopy").onclick = ()=>{ const t=$("dtMsg").value; const ok=()=>{ $("dtNote").textContent = ph ? T("dtCopHas") : T("dtCopNo"); };
+    const fail=()=>{ $("dtMsg").focus(); $("dtMsg").select(); $("dtNote").textContent=T("copyFail"); };
+    try { navigator.clipboard.writeText(t).then(ok,fail); } catch(e){ fail(); } };
+}
+function hideDetail(){ $("dtBg").hidden = true; document.body.style.overflow = ""; DT = null; }
+function closeDetail(){ if (SOLO) return; if (DT && location.hash === "#"+DT.u.id){ try { history.back(); return; } catch(e){} } hideDetail(); }
+window.addEventListener("popstate", ()=>{ const h=(location.hash||"").slice(1); if (!$("lb").hidden){ $("lb").hidden = true; LB = null; } if (!SOLO && DT && h !== DT.u.id) hideDetail(); });
+$("dtBg").addEventListener("click", e=>{ if (e.target.id==="dtBg") closeDetail(); });
+// lightbox
+let LB = null;
+function openLB(u,i){ LB = {u,i}; $("lb").hidden = false; drawLB(); }
+function drawLB(){ const {u,i} = LB; $("lbImg").src = u.ph[i]; $("lbImg").alt = T("phAlt",{c:u.c})+" "+(i+1); $("lbCap").textContent = `${u.c} · ${i+1}/${u.ph.length}`; }
+const step = d=>{ if(!LB) return; LB.i = (LB.i + d + LB.u.ph.length) % LB.u.ph.length; drawLB(); };
+$("lbPrev").onclick = ()=>step(-1); $("lbNext").onclick = ()=>step(1); $("lbClose").onclick = ()=>{ $("lb").hidden = true; LB=null; };
+document.addEventListener("keydown", e=>{ if ($("lb").hidden) { if (e.key==="Escape"){ $("sendBg").hidden = true; closeDetail(); } return; } if (e.key==="ArrowLeft") step(-1); if (e.key==="ArrowRight") step(1); if (e.key==="Escape") $("lbClose").click(); });
+let tx = null; $("lb").addEventListener("touchstart", e=>{ tx = e.touches[0].clientX; }, {passive:true});
+$("lb").addEventListener("touchend", e=>{ if (tx==null) return; const dx = e.changedTouches[0].clientX - tx; if (Math.abs(dx) > 40) step(dx<0?1:-1); tx = null; });
+applyStatic(); stats(); draw();
+// mở thẳng căn khi link có #mã-căn (người trực bấm link trong tin Zalo)
+const openFromHash = ()=>{ const h = (location.hash||"").slice(1);
+  if (/^c-/.test(h)){ const id = h.slice(2); if (units.some(u=>u.id===id)){ SOLO = true; document.body.classList.add("solo"); const u = units.find(x=>x.id===id); document.title = u.c+" · "+typeL(u.t)+" · Vinhomes Grand Park"; if (!(DT && DT.u.id===id)) openDetail(id); return; } }
+  if (SOLO){ SOLO = false; document.body.classList.remove("solo"); } if (h && units.some(u=>u.id===h) && !(DT && DT.u.id===h)) openDetail(h); else if (!h && DT) hideDetail(); };
+openFromHash(); window.addEventListener("hashchange", openFromHash);
 </script>
-</body>
-</html>
