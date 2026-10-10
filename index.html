@@ -146,6 +146,20 @@ body.solo .dt{max-height:none;height:100%;border-radius:0;margin:0 auto}
 body.solo .solo-hide{display:none!important}
 .hdtop{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
 .hdtop h1{flex:1;min-width:0}
+.hdright{display:flex;gap:8px;align-items:center;flex:none}
+.umw{position:relative}
+.umbtn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 6px 5px 11px;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.umbtn:hover{box-shadow:0 2px 8px rgba(0,0,0,.14)}
+.umbtn .ham{width:16px;height:16px}
+.umbtn .av{width:28px;height:28px;border-radius:50%;background:var(--ink2);color:var(--card);display:inline-flex;align-items:center;justify-content:center}
+.umbtn .av svg{width:18px;height:18px}
+.ummenu{position:absolute;right:0;top:calc(100% + 8px);z-index:60;min-width:250px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:8px 0;box-shadow:0 12px 32px rgba(0,0,0,.18)}
+.ummenu a{display:block;padding:11px 16px;color:var(--ink);text-decoration:none;font-size:14.5px}
+.ummenu a:hover{background:var(--park-soft)}
+.ummenu a b{display:block;font-weight:600}
+.ummenu a span{display:block;font-size:12.5px;color:var(--ink2);margin-top:2px}
+.ummenu hr{border:0;border-top:1px solid var(--line);margin:6px 0}
+@media (max-width:560px){.hdtop{flex-wrap:wrap}.hdright{order:-1;width:100%;justify-content:flex-end}}
 .langsw{flex:none}
 .dt-bar .langsw{margin-left:auto}
 .lgw{position:relative}
@@ -166,7 +180,7 @@ body.solo .solo-hide{display:none!important}
 
 <div class="wrap">
   <header>
-    <div class="hdtop"><h1 data-t="title">Quỹ căn Vinhomes Grand Park</h1><div class="langsw" id="langTop"></div></div>
+    <div class="hdtop"><h1 data-t="title">Quỹ căn Vinhomes Grand Park</h1><div class="hdright"><div class="langsw" id="langTop"></div><div class="umw"><button type="button" class="umbtn" id="umBtn" aria-haspopup="true" aria-expanded="false" aria-label="Menu"><svg class="ham" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span class="av"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7z"/></svg></span></button><div class="ummenu" id="umMenu" hidden></div></div></div></div>
     <p class="lede" data-t="lede">Căn hộ cho thuê ngắn ngày và theo tháng tại Thủ Đức. Lọc theo phân khu, số phòng ngủ, giá và ngày ở, bấm ảnh để xem cả bộ, chọn những căn bạn thích rồi gửi qua Zalo để được báo trống và hẹn xem nhà.</p>
     <div class="stats" id="stats"></div>
   </header>
@@ -188,7 +202,6 @@ body.solo .solo-hide{display:none!important}
   <p class="result" id="result"></p>
   <div class="grid" id="grid"></div>
   <p class="foot" id="foot"></p>
-  <p class="foot" style="margin-top:10px"><a href="https://claude.ai/artifact/RBRpwFbFRBW89X7HXqKsvR" target="_blank" rel="noopener" style="color:var(--ink2);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:6px 14px;display:inline-flex;gap:6px;align-items:center;font-size:13px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Đăng nhập quản lý · Host login</a></p>
 </div>
 
 <div class="tray" id="tray" hidden><span><b id="trayN">0</b> <span data-t="traySel">căn đã chọn</span></span><button type="button" id="traySend" data-t="sendZalo">Gửi qua Zalo</button><button type="button" class="ghost" id="trayClear" data-t="clearSel">Bỏ chọn</button></div>
@@ -315,6 +328,35 @@ Object.assign(I18.ru,{wcOpen:"Уже в друзьях? Открыть WeChat", 
 Object.assign(I18.ko,{wcOpen:"이미 친구인가요? 위챗 열기", wcS3:"이미 친구라면: 위챗을 열고 상단 검색에서 “{w}”을(를) 찾아 채팅을 연 뒤 입력창을 길게 눌러 → 붙여넣기 → 보내기.", stepHas:"상담원 이름 옆의 Zalo, WhatsApp 또는 위챗을 누르세요. 집 정보가 자동으로 복사되어 있으니 앱에서 입력창을 길게 눌러 → 붙여넣기 → 보내기.", zOk:"집 정보가 복사되었습니다. 채팅 앱에서 입력창을 길게 눌러 → 붙여넣기 → 보내기.", zFail:"채팅 앱이 열리는 중입니다. 붙여넣기가 안 되면 돌아와서 '메시지 복사'를 누른 뒤 붙여넣으세요.", dtCopHas:"복사되었습니다. 상담원 이름 옆의 Zalo, WhatsApp 또는 위챗을 눌러 붙여넣으세요.", sendZalo:"상담원에게 보내기", contactZ:"상담 문의", msgWa:"WhatsApp", msgWc:"위챗", wcT:"위챗에서 {n} 친구 추가", wcS1:"집 정보가 복사되었습니다.", wcS2:"위챗으로 이 코드를 스캔하세요. 같은 휴대폰이라면 코드를 길게 눌러 이미지를 저장한 뒤 위챗 → 스캔 → 앨범을 선택하세요. 친구 추가 후 메시지를 붙여넣어 보내세요."});
 Object.assign(I18.ja,{wcOpen:"友だち追加済み？WeChatを開く", wcS3:"すでに友だちの場合：WeChatを開き、上の検索で「{w}」を探してチャットを開き、入力欄を長押し → 貼り付け → 送信。", stepHas:"担当者名の横の Zalo・WhatsApp・WeChat をタップしてください。物件情報は自動でコピーされます。アプリで入力欄を長押し → 貼り付け → 送信。", zOk:"物件情報をコピーしました。チャットアプリで入力欄を長押し → 貼り付け → 送信。", zFail:"チャットアプリを開いています。貼り付けできない場合は、戻って「メッセージをコピー」をタップしてから貼り付けてください。", dtCopHas:"コピーしました。担当者名の横の Zalo・WhatsApp・WeChat をタップして貼り付けてください。", sendZalo:"担当者に送る", contactZ:"お問い合わせ", msgWa:"WhatsApp", msgWc:"WeChat", wcT:"WeChatで{n}を追加", wcS1:"物件情報をコピーしました。", wcS2:"WeChatでこのコードをスキャンしてください。同じスマホの場合は、コードを長押しして画像を保存し、WeChat → スキャン → アルバムを選択。追加後、メッセージを貼り付けて送信してください。"});
 function copyFrom(m){ let sync=false; try { m.focus({preventScroll:true}); m.select(); m.setSelectionRange(0, m.value.length); sync = document.execCommand("copy"); window.getSelection && window.getSelection().removeAllRanges(); m.blur(); } catch(err){} try { navigator.clipboard.writeText(m.value).catch(()=>{}); } catch(err){} return sync; }
+Object.assign(I18.vi,{umLogin:"Đăng nhập quản lý", umLoginS:"Dành cho chủ nhà, host và nhân viên", umList:"Ký gửi căn hộ", umListS:"Có căn ở Grand Park muốn cho thuê? Nhắn cho chúng tôi"});
+Object.assign(I18.en,{umLogin:"Host login", umLoginS:"For owners, hosts and staff", umList:"List your apartment", umListS:"Own a unit in Grand Park? Message us"});
+Object.assign(I18.zh,{umLogin:"房东登录", umLoginS:"供业主、房东和员工使用", umList:"委托出租房源", umListS:"在 Grand Park 有房想出租？联系我们"});
+Object.assign(I18.ru,{umLogin:"Вход для хозяев", umLoginS:"Для владельцев, хостов и персонала", umList:"Сдать квартиру через нас", umListS:"Есть квартира в Grand Park? Напишите нам"});
+Object.assign(I18.ko,{umLogin:"호스트 로그인", umLoginS:"집주인, 호스트, 직원 전용", umList:"집 위탁 등록", umListS:"그랜드파크에 집이 있으신가요? 메시지 주세요"});
+Object.assign(I18.ja,{umLogin:"ホストログイン", umLoginS:"オーナー・ホスト・スタッフ専用", umList:"お部屋を掲載する", umListS:"グランドパークにお部屋をお持ちですか？ご連絡ください"});
+Object.assign(I18.vi,{"hpGreet":"Chào anh/chị, em đang xem quỹ căn trên bnbvin.com và cần tư vấn thêm.", "umHelp": "Trung tâm trợ giúp", "umHelpS": "Cách xem căn, đặt căn và liên hệ", "hpT": "Trung tâm trợ giúp", "hpH1": "Cách đặt căn", "hpS": ["Chọn ngày ở ở phần lọc để chỉ hiện căn còn trống.", "Bấm “Xem chi tiết” để xem toàn bộ ảnh, giá và lịch trống 14 ngày.", "Bấm Zalo, WhatsApp hoặc WeChat cạnh tên người tư vấn. Thông tin căn được chép sẵn, chỉ cần dán và gửi.", "Muốn hỏi nhiều căn cùng lúc: bấm “Chọn căn” ở từng căn, rồi bấm “Gửi cho tư vấn” ở thanh dưới."], "hpH2": "Liên hệ tư vấn", "hpH3": "Câu hỏi thường gặp", "hpQ": [["Giá đã gồm gì?", "Giá thuê đêm hoặc tháng như trên trang. Điện nước, dọn phòng và cọc sẽ được tư vấn báo cụ thể khi bạn hỏi căn."], ["Lịch trống có chính xác không?", "Lịch được cập nhật mỗi sáng. Vui lòng nhắn để xác nhận trước khi chốt."], ["Có hỗ trợ khách nước ngoài không?", "Có. Trang có 6 ngôn ngữ, liên hệ được qua WhatsApp và WeChat; chúng tôi hỗ trợ đăng ký tạm trú."]]});
+Object.assign(I18.en,{"hpGreet":"Hi, I'm looking at the apartments on bnbvin.com and would like some help.", "umHelp": "Help centre", "umHelpS": "How to browse, book and contact us", "hpT": "Help centre", "hpH1": "How to book", "hpS": ["Pick your dates in the filters to show only available apartments.", "Tap “View details” for all photos, prices and the 14-day availability.", "Tap Zalo, WhatsApp or WeChat next to an advisor. The apartment details are copied, just paste and send.", "Asking about several apartments: tap “Select” on each, then “Send to an advisor” in the bottom bar."], "hpH2": "Contact an advisor", "hpH3": "FAQ", "hpQ": [["What does the price include?", "The nightly or monthly rent shown. Utilities, cleaning and deposit are confirmed by the advisor when you ask."], ["Is the availability accurate?", "It is updated every morning. Please message us to confirm before booking."], ["Do you help foreign guests?", "Yes. The site is in 6 languages, you can reach us on WhatsApp and WeChat, and we help with residence registration."]]});
+Object.assign(I18.zh,{"hpGreet":"您好，我在 bnbvin.com 看房源，想咨询一下。", "umHelp": "帮助中心", "umHelpS": "如何看房、预订和联系我们", "hpT": "帮助中心", "hpH1": "如何预订", "hpS": ["在筛选中选择入住日期，只显示可订房源。", "点击“查看详情”查看全部照片、价格和 14 天空房日历。", "点击顾问名字旁的 Zalo、WhatsApp 或微信，房源信息已复制，粘贴发送即可。", "想同时咨询多套：在每套房点“选择”，再点底部的“发送给顾问”。"], "hpH2": "联系顾问", "hpH3": "常见问题", "hpQ": [["价格包含什么？", "页面显示的日租或月租。水电、清洁和押金由顾问在咨询时具体说明。"], ["空房日历准确吗？", "每天早上更新。预订前请先留言确认。"], ["支持外国客人吗？", "支持。网站有 6 种语言，可通过 WhatsApp 和微信联系，我们协助办理暂住登记。"]]});
+Object.assign(I18.ru,{"hpGreet":"Здравствуйте, я смотрю квартиры на bnbvin.com и хотел(а) бы получить консультацию.", "umHelp": "Центр помощи", "umHelpS": "Как смотреть, бронировать и связаться", "hpT": "Центр помощи", "hpH1": "Как забронировать", "hpS": ["Выберите даты в фильтрах, чтобы видеть только свободные квартиры.", "Нажмите «Подробнее» — все фото, цены и календарь на 14 дней.", "Нажмите Zalo, WhatsApp или WeChat рядом с менеджером. Данные квартиры скопированы — вставьте и отправьте.", "Несколько квартир сразу: нажмите «Выбрать» на каждой, затем «Отправить менеджеру» внизу."], "hpH2": "Связаться с менеджером", "hpH3": "Частые вопросы", "hpQ": [["Что входит в цену?", "Указанная посуточная или помесячная аренда. Коммунальные услуги, уборку и депозит менеджер уточнит при запросе."], ["Календарь точный?", "Обновляется каждое утро. Пожалуйста, напишите нам для подтверждения перед бронированием."], ["Помогаете иностранцам?", "Да. Сайт на 6 языках, связь через WhatsApp и WeChat, помогаем с регистрацией проживания."]]});
+Object.assign(I18.ko,{"hpGreet":"안녕하세요, bnbvin.com에서 집을 보고 있는데 상담을 받고 싶습니다.", "umHelp": "고객센터", "umHelpS": "집 보기, 예약, 문의 방법", "hpT": "고객센터", "hpH1": "예약 방법", "hpS": ["필터에서 날짜를 선택하면 빈 집만 표시됩니다.", "'자세히 보기'를 눌러 모든 사진, 가격, 14일 예약 현황을 확인하세요.", "상담원 이름 옆의 Zalo, WhatsApp 또는 위챗을 누르세요. 집 정보가 복사되어 있으니 붙여넣어 보내기만 하면 됩니다.", "여러 집을 문의하려면 각 집에서 '선택'을 누른 뒤 아래의 '상담원에게 보내기'를 누르세요."], "hpH2": "상담원 문의", "hpH3": "자주 묻는 질문", "hpQ": [["가격에 무엇이 포함되나요?", "페이지에 표시된 1박 또는 월 임대료입니다. 전기·수도, 청소, 보증금은 문의 시 상담원이 안내합니다."], ["예약 현황이 정확한가요?", "매일 아침 업데이트됩니다. 예약 전 메시지로 확인해 주세요."], ["외국인 손님도 지원하나요?", "네. 6개 언어를 지원하고 WhatsApp, 위챗으로 연락할 수 있으며 거주 등록을 도와드립니다."]]});
+Object.assign(I18.ja,{"hpGreet":"こんにちは、bnbvin.comで物件を見ていて、相談したいです。", "umHelp": "ヘルプセンター", "umHelpS": "物件の見方・予約・お問い合わせ", "hpT": "ヘルプセンター", "hpH1": "予約の流れ", "hpS": ["絞り込みで日付を選ぶと、空いている物件だけが表示されます。", "「詳細を見る」で全写真、料金、14日間の空室状況を確認できます。", "担当者名の横の Zalo・WhatsApp・WeChat をタップ。物件情報はコピー済みなので、貼り付けて送信するだけです。", "複数の物件をまとめて問い合わせるには、各物件で「選択」を押し、下の「担当者に送る」をタップ。"], "hpH2": "担当者に問い合わせ", "hpH3": "よくある質問", "hpQ": [["料金には何が含まれますか？", "表示の1泊または月額家賃です。光熱費・清掃・保証金はお問い合わせ時に担当者がご案内します。"], ["空室状況は正確ですか？", "毎朝更新しています。ご予約前にメッセージでご確認ください。"], ["外国人ゲストに対応していますか？", "はい。6言語対応で、WhatsApp・WeChatで連絡でき、滞在登録もお手伝いします。"]]});
+function openHelp(){ let bg = $("hpBg"); if (bg) bg.remove(); bg = document.createElement("div"); bg.id="hpBg"; bg.className="sheet-bg"; bg.style.zIndex="45";
+  const msg = $("hpMsg"); const L = (DATA.contacts||[]).filter(c=>(c.phone||"").replace(/\D/g,"").length>=9);
+  bg.innerHTML = `<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="hpT"><h2 id="hpT">${esc(T("hpT"))}</h2>
+   <h3 style="font:600 13px var(--f-body);text-transform:uppercase;letter-spacing:.06em;color:var(--ink2);margin:14px 0 6px">${esc(T("hpH1"))}</h3><ol style="margin:0;padding-left:20px;line-height:1.55">${T("hpS").map(x=>`<li style="margin-bottom:4px">${esc(x)}</li>`).join("")}</ol>
+   ${L.length?`<h3 style="font:600 13px var(--f-body);text-transform:uppercase;letter-spacing:.06em;color:var(--ink2);margin:16px 0 6px">${esc(T("hpH2"))}</h3><textarea id="hpMsg" hidden>${esc(T("hpGreet"))}</textarea>${contactRows("hpMsg","hpNote")}<p id="hpNote" style="font-size:13px;color:var(--park);margin:4px 0 0"></p>`:""}
+   <h3 style="font:600 13px var(--f-body);text-transform:uppercase;letter-spacing:.06em;color:var(--ink2);margin:16px 0 6px">${esc(T("hpH3"))}</h3>${T("hpQ").map(q=>`<details style="border-top:1px solid var(--line);padding:8px 0"><summary style="cursor:pointer;font-weight:600">${esc(q[0])}</summary><p style="margin:6px 0 0;color:var(--ink2)">${esc(q[1])}</p></details>`).join("")}
+   <div class="acts"><button class="btn pri" type="button" id="hpClose">${esc(T("close"))}</button></div></div>`;
+  document.body.appendChild(bg); bg.addEventListener("click", ev=>{ if (ev.target===bg || ev.target.id==="hpClose") bg.remove(); }); }
+document.addEventListener("click", e=>{ const a = e.target.closest("[data-help]"); if (!a) return; e.preventDefault(); const m=$("umMenu"); if (m) m.hidden = true; openHelp(); });
+function umFill(){ const m = $("umMenu"); if (!m) return;
+  const c = (DATA.contacts||[]).find(x=>(x.phone||"").replace(/\D/g,"").length>=9); const z = c ? "https://zalo.me/"+c.phone.replace(/\D/g,"").replace(/^84/,"0") : "";
+  m.innerHTML = `<a href="#" data-help="1"><b>${esc(T("umHelp"))}</b><span>${esc(T("umHelpS"))}</span></a><hr><a href="https://claude.ai/artifact/RBRpwFbFRBW89X7HXqKsvR" target="_blank" rel="noopener"><b>${esc(T("umLogin"))}</b><span>${esc(T("umLoginS"))}</span></a>${z?`<hr><a href="${z}" target="_blank" rel="noopener"><b>${esc(T("umList"))}</b><span>${esc(T("umListS"))}</span></a>`:""}`; }
+document.addEventListener("click", e=>{ const b = e.target.closest("#umBtn"), m = $("umMenu"); if (!m) return;
+  if (b){ umFill(); m.hidden = !m.hidden; b.setAttribute("aria-expanded", String(!m.hidden)); return; }
+  if (!e.target.closest("#umMenu")) { m.hidden = true; const bb = $("umBtn"); if (bb) bb.setAttribute("aria-expanded","false"); } });
+document.addEventListener("keydown", e=>{ if (e.key==="Escape"){ const m=$("umMenu"); if (m) m.hidden = true; } });
+
 const LANGS = [["vi","Tiếng Việt"],["en","English"],["zh","中文"],["ru","Русский"],["ko","한국어"],["ja","日本語"]];
 const GLOBE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/></svg>`;
 const langHtml = () => { const cur = (LANGS.find(x=>x[0]===LANG)||LANGS[0])[1];
