@@ -51,6 +51,15 @@ h1{font:700 clamp(26px,5vw,40px)/1.1 var(--f-display);margin:0;letter-spacing:-.
 input,select{font:14px var(--f-body);color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:7px 10px;min-width:0}
 input[type=search]{flex:1 1 180px;max-width:280px}
 @media (min-width:760px){.filters{position:sticky;top:env(safe-area-inset-top,0px);z-index:5}}
+.svbar{margin-top:16px}
+.svwrap{position:relative}.svpanel{position:absolute;z-index:20;top:calc(100% + 10px);left:0;right:0;max-width:560px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:24px;box-shadow:0 14px 40px rgba(0,0,0,.18);padding:18px;display:flex;flex-wrap:wrap;gap:10px;max-height:70vh;overflow:auto}.svpanel .svdone{flex-basis:100%;display:flex;justify-content:flex-end;margin-top:4px}.svpanel .svdone button{border:0;background:var(--ink);color:var(--bg);border-radius:10px;padding:9px 18px;font:600 14px var(--f-body);cursor:pointer}
+.svchip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:10px 16px;font:500 15px var(--f-body);cursor:pointer}
+.svchip[aria-pressed="true"]{border-color:var(--ink);background:var(--ink);color:var(--bg)}
+.svchip span{font-size:18px;line-height:1}
+.svpick{border:0;background:transparent;padding:0;text-align:left;font:14px var(--f-body);color:var(--ink2);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%}
+.svreq{max-width:640px;margin:16px auto 0;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px}
+.svreq textarea{width:100%;min-height:110px;font:14px/1.5 var(--f-body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px}
+@media (max-width:760px){.svbar .seg:nth-child(2){grid-column:1/-1}}
 .mtabs{display:flex;justify-content:center;gap:34px;border-bottom:1px solid var(--line)}
 .mtab{display:inline-flex;align-items:center;gap:8px;border:0;background:transparent;padding:10px 2px 12px;font:600 15px var(--f-body);color:var(--ink2);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px}
 .mtab .mi{font-size:24px;line-height:1}
@@ -394,10 +403,43 @@ function syncSel(){ const z=$("fZoneSel"), b=$("fBedSel"); if (!z||!b) return;
   z.innerHTML = [["",T("anyZone")], ...ZORDER.filter(x=>units.some(u=>u.z===x)).map(x=>[x,zoneL(x)])].map(([v,l])=>`<option value="${esc(v)}" ${F.zone===v?"selected":""}>${esc(l)}</option>`).join("");
   b.innerHTML = [["",T("anyType")], ...[0,1,2,3,4].filter(n=>units.some(u=>bed(u.t)===n)).map(n=>[String(n), n===0?typeL("Studio"):typeL(n+"PN")])].map(([v,l])=>`<option value="${esc(v)}" ${F.bed===v?"selected":""}>${esc(l)}</option>`).join(""); }
 document.addEventListener("change", e=>{ if (e.target.id==="fZoneSel"){ F.zone=e.target.value; draw(); } else if (e.target.id==="fBedSel"){ F.bed=e.target.value; draw(); } });
+Object.assign(I18.vi,{"svcWhen": "Thời gian", "svcAddDate": "Thêm ngày", "svcWhat": "Loại dịch vụ", "svcAdd": "Thêm dịch vụ", "svcGo": "Tìm kiếm", "svcP": "Chọn ngày và loại dịch vụ bạn cần, rồi gửi yêu cầu cho tư vấn để được báo giá và xác nhận.", "svcNoteL": "Ghi chú thêm (số người, giờ, địa chỉ…)", "svcNeed": "Hãy chọn ít nhất một loại dịch vụ.", "svcReqT": "Yêu cầu của bạn", "svcM1": "[Dịch vụ] Khách cần: {s}", "svcM2": "Ngày: {d}", "svcM3": "Anh/chị báo giúp giá và xác nhận lịch nhé.", "svcList": {"clean": "Dọn phòng", "laundry": "Giặt ủi", "airport": "Đưa đón sân bay", "visa": "Đưa đón làm visa", "bike": "Thuê xe máy", "car": "Thuê xe ô tô", "setup": "Setup căn hộ dịch vụ", "findbnb": "Tìm căn hộ làm BnB"}});
+Object.assign(I18.en,{"svcWhen": "When", "svcAddDate": "Add dates", "svcWhat": "Type of service", "svcAdd": "Add service", "svcGo": "Search", "svcP": "Pick a date and the services you need, then send the request to an advisor for a quote and confirmation.", "svcNoteL": "Extra notes (people, time, address…)", "svcNeed": "Please choose at least one service.", "svcReqT": "Your request", "svcM1": "[Services] Guest needs: {s}", "svcM2": "Date: {d}", "svcM3": "Could you send me the price and confirm availability?", "svcList": {"clean": "Cleaning", "laundry": "Laundry", "airport": "Airport transfer", "visa": "Visa office transfer", "bike": "Motorbike rental", "car": "Car rental", "setup": "Serviced apartment setup", "findbnb": "Find an apartment to run as BnB"}});
+Object.assign(I18.zh,{"svcWhen": "时间", "svcAddDate": "添加日期", "svcWhat": "服务类型", "svcAdd": "添加服务", "svcGo": "搜索", "svcP": "选择日期和所需服务，然后发送给顾问获取报价并确认。", "svcNoteL": "备注（人数、时间、地址等）", "svcNeed": "请至少选择一项服务。", "svcReqT": "您的需求", "svcM1": "[服务] 客人需要：{s}", "svcM2": "日期：{d}", "svcM3": "请告知价格并确认时间，谢谢。", "svcList": {"clean": "保洁", "laundry": "洗衣", "airport": "机场接送", "visa": "办签证接送", "bike": "摩托车租赁", "car": "汽车租赁", "setup": "服务式公寓布置", "findbnb": "寻找可做民宿的公寓"}});
+Object.assign(I18.ru,{"svcWhen": "Когда", "svcAddDate": "Добавить дату", "svcWhat": "Тип услуги", "svcAdd": "Добавить услугу", "svcGo": "Найти", "svcP": "Выберите дату и нужные услуги, затем отправьте запрос менеджеру, чтобы узнать цену и подтвердить.", "svcNoteL": "Примечания (кол-во людей, время, адрес…)", "svcNeed": "Выберите хотя бы одну услугу.", "svcReqT": "Ваш запрос", "svcM1": "[Услуги] Гостю нужно: {s}", "svcM2": "Дата: {d}", "svcM3": "Подскажите, пожалуйста, цену и подтвердите время.", "svcList": {"clean": "Уборка", "laundry": "Стирка", "airport": "Трансфер из аэропорта", "visa": "Трансфер для оформления визы", "bike": "Аренда мотобайка", "car": "Аренда автомобиля", "setup": "Обустройство апартаментов под сдачу", "findbnb": "Подбор квартиры под BnB"}});
+Object.assign(I18.ko,{"svcWhen": "날짜", "svcAddDate": "날짜 추가", "svcWhat": "서비스 유형", "svcAdd": "서비스 추가", "svcGo": "검색", "svcP": "날짜와 필요한 서비스를 고른 뒤 상담원에게 요청을 보내 가격과 일정을 확인하세요.", "svcNoteL": "추가 메모 (인원, 시간, 주소 등)", "svcNeed": "서비스를 하나 이상 선택해 주세요.", "svcReqT": "요청 내용", "svcM1": "[서비스] 손님 요청: {s}", "svcM2": "날짜: {d}", "svcM3": "가격과 일정 확인 부탁드립니다.", "svcList": {"clean": "청소", "laundry": "세탁", "airport": "공항 픽업", "visa": "비자 업무 차량", "bike": "오토바이 렌트", "car": "자동차 렌트", "setup": "서비스 아파트 세팅", "findbnb": "BnB용 아파트 찾기"}});
+Object.assign(I18.ja,{"svcWhen": "日付", "svcAddDate": "日付を追加", "svcWhat": "サービスの種類", "svcAdd": "サービスを追加", "svcGo": "検索", "svcP": "日付と必要なサービスを選び、担当者にリクエストを送って料金と予約を確認してください。", "svcNoteL": "メモ（人数・時間・住所など）", "svcNeed": "サービスを1つ以上選んでください。", "svcReqT": "リクエスト内容", "svcM1": "[サービス] お客様の希望：{s}", "svcM2": "日付：{d}", "svcM3": "料金と日程のご確認をお願いします。", "svcList": {"clean": "清掃", "laundry": "洗濯", "airport": "空港送迎", "visa": "ビザ手続き送迎", "bike": "バイクレンタル", "car": "レンタカー", "setup": "サービスアパートの立ち上げ", "findbnb": "民泊向け物件探し"}});
+Object.assign(I18.vi,{"svcDone":"Xong"});
+Object.assign(I18.en,{"svcDone":"Done"});
+Object.assign(I18.zh,{"svcDone":"完成"});
+Object.assign(I18.ru,{"svcDone":"Готово"});
+Object.assign(I18.ko,{"svcDone":"완료"});
+Object.assign(I18.ja,{"svcDone":"完了"});
+const SVC_ICON = {"clean": "🧹", "laundry": "🧺", "airport": "✈️", "visa": "🛂", "bike": "🛵", "car": "🚗", "setup": "🛋️", "findbnb": "🔑"};
+const SV = {date:"", pick:new Set(), open:false, sent:false};
+function svcMsgText(){ const names = [...SV.pick].map(id=>T("svcList")[id]).join(", "); const note = ($("svcExtra")&&$("svcExtra").value.trim())||"";
+  return [T("svcM1",{s:names}), SV.date?T("svcM2",{d:fmtD(SV.date)+"/"+SV.date.slice(0,4)}):"", note, T("svcM3")].filter(Boolean).join("\n"); }
+function renderSvc(){ const box = $("svcBox"); const L = (DATA.contacts||[]).filter(c=>(c.phone||"").replace(/\D/g,"").length>=9);
+  const label = SV.pick.size ? [...SV.pick].map(id=>T("svcList")[id]).join(", ") : T("svcAdd");
+  box.innerHTML = `<p class="lede" style="margin:14px auto 0;text-align:center">${esc(T("svcP"))}</p>
+  <div class="svwrap"><div class="sbar svbar"><label class="seg"><span class="sl">${esc(T("svcWhen"))}</span><input type="date" id="svcDate" min="${TODAY}" value="${SV.date}" aria-label="${esc(T("svcWhen"))}"></label>
+   <div class="seg" id="svcSeg"><span class="sl">${esc(T("svcWhat"))}</span><button type="button" class="svpick" id="svcPickBtn" aria-expanded="${SV.open}" style="color:${SV.pick.size?"var(--ink)":"var(--ink2)"}">${esc(label)}</button></div>
+   <button type="button" class="sgo" id="svcGo" aria-label="${esc(T("svcGo"))}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span style="display:inline">${esc(T("svcGo"))}</span></button></div>
+  ${SV.open?`<div class="svpanel" id="svcPanel">${Object.keys(SVC_ICON).map(id=>`<button type="button" class="svchip" data-svc="${id}" aria-pressed="${SV.pick.has(id)}"><span>${SVC_ICON[id]}</span>${esc(T("svcList")[id])}</button>`).join("")}<div class="svdone"><button type="button" id="svcDone">${esc(T("svcDone"))}</button></div></div>`:""}</div>
+  <p id="svcErr" style="text-align:center;color:var(--sun);font-weight:600;margin:8px 0 0"></p>
+  ${SV.sent && L.length?`<div class="svreq" id="svcReq"><h2 style="font:600 18px var(--f-display);margin:0 0 8px">${esc(T("svcReqT"))}</h2><textarea id="svcMsg">${esc(svcMsgText())}</textarea><input id="svcExtra" placeholder="${esc(T("svcNoteL"))}" style="width:100%;margin:8px 0">${contactRows("svcMsg","svcNote")}<p id="svcNote" style="font-size:13px;color:var(--park);margin:4px 0 0"></p></div>`:""}`; }
+document.addEventListener("click", e=>{
+  if (e.target.closest("#svcPickBtn")){ SV.open = !SV.open; renderSvc(); return; }
+  if (e.target.closest("#svcDone")){ SV.open=false; renderSvc(); return; }
+  if (SV.open && !e.target.closest("#svcPanel") && !e.target.closest("#svcGo") && !$("svcBox").hidden && !e.target.closest("[data-svc]")){ SV.open=false; renderSvc(); }
+  const c = e.target.closest("[data-svc]"); if (c){ const id=c.dataset.svc; SV.pick.has(id)?SV.pick.delete(id):SV.pick.add(id); renderSvc(); return; }
+  if (e.target.closest("#svcGo")){ if (!SV.pick.size){ SV.open = true; renderSvc(); $("svcErr").textContent = T("svcNeed"); return; } SV.open=false; SV.sent=true; renderSvc(); const r=$("svcReq"); if (r) r.scrollIntoView({behavior:"smooth",block:"start"}); }
+});
+document.addEventListener("change", e=>{ if (e.target.id==="svcDate"){ SV.date = e.target.value; if (SV.sent) renderSvc(); } });
+document.addEventListener("input", e=>{ if (e.target.id==="svcExtra"){ const m=$("svcMsg"); if (m) m.value = svcMsgText(); } });
 function setTab(t){ const svc = t==="svc"; $("tabStay").setAttribute("aria-selected", String(!svc)); $("tabSvc").setAttribute("aria-selected", String(svc));
   $("stayBox").hidden = svc; $("result").hidden = svc; $("grid").hidden = svc; $("svcBox").hidden = !svc;
-  if (svc){ const L = (DATA.contacts||[]).filter(c=>(c.phone||"").replace(/\D/g,"").length>=9);
-    $("svcBox").innerHTML = `<div style="max-width:640px;margin:18px auto 0;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px"><h2 style="font:600 20px var(--f-display);margin:0 0 6px">${esc(T("svcT"))}</h2><p style="color:var(--ink2);margin:0 0 12px">${esc(T("svcP"))}</p>${L.length?`<textarea id="svcMsg" hidden>${esc(T("hpGreet"))}</textarea>${contactRows("svcMsg","svcNote")}<p id="svcNote" style="font-size:13px;color:var(--park);margin:4px 0 0"></p>`:""}</div>`; } }
+  if (svc) renderSvc(); }
 document.addEventListener("click", e=>{ if (e.target.closest("#tabStay")) setTab("stay"); else if (e.target.closest("#tabSvc")) setTab("svc"); });
 function umFill(){ const m = $("umMenu"); if (!m) return;
   const c = (DATA.contacts||[]).find(x=>(x.phone||"").replace(/\D/g,"").length>=9); const z = c ? "https://zalo.me/"+c.phone.replace(/\D/g,"").replace(/^84/,"0") : "";
