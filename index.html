@@ -51,6 +51,11 @@ h1{font:700 clamp(26px,5vw,40px)/1.1 var(--f-display);margin:0;letter-spacing:-.
 input,select{font:14px var(--f-body);color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:7px 10px;min-width:0}
 input[type=search]{flex:1 1 180px;max-width:280px}
 @media (min-width:760px){.filters{position:sticky;top:env(safe-area-inset-top,0px);z-index:5}}
+.mtabs{display:flex;justify-content:center;gap:34px;border-bottom:1px solid var(--line)}
+.mtab{display:inline-flex;align-items:center;gap:8px;border:0;background:transparent;padding:10px 2px 12px;font:600 15px var(--f-body);color:var(--ink2);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px}
+.mtab .mi{font-size:24px;line-height:1}
+.mtab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink)}
+.mtab:hover{color:var(--ink)}
 .cats{display:flex;gap:22px;overflow-x:auto;scrollbar-width:none;padding:2px 2px 0;border-bottom:1px solid var(--line)}
 .cats::-webkit-scrollbar{display:none}
 .cats .chip{border:0;background:transparent;border-radius:0;padding:8px 0 10px;color:var(--ink2);font:600 14px var(--f-body);white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-1px}
@@ -69,12 +74,13 @@ input[type=search]{flex:1 1 180px;max-width:280px}
 .sgo{flex:none;display:inline-flex;align-items:center;gap:6px;border:0;border-radius:999px;background:#E31C5F;color:#fff;height:48px;min-width:48px;padding:0 14px;font:600 15px var(--f-body);cursor:pointer}
 .sgo svg{width:18px;height:18px}
 .sgo span{display:none}
-.brow{margin-top:10px}
+.brow{margin-top:10px;gap:8px}
+.brow input[type=search]{max-width:220px}
 @media (max-width:760px){
  .sbar{display:grid;grid-template-columns:1fr 1fr;border-radius:18px;padding:6px;gap:2px}
  .seg{border-radius:12px;padding:8px 12px}
  .seg+.seg::before{display:none}
- .seg:nth-child(3),.seg:nth-child(4){grid-column:1/-1}
+ .seg:nth-child(1),.seg:nth-child(4){grid-column:1/-1}
  .sgo{grid-column:1/-1;width:100%;justify-content:center;margin-top:4px}
  .sgo span{display:inline}
 }
@@ -213,16 +219,20 @@ body.solo .solo-hide{display:none!important}
   </header>
 
   <div class="filters" role="search">
-    <div class="cats" id="fZone" aria-label="Phân khu"></div>
+    <div class="mtabs" role="tablist"><button type="button" class="mtab" id="tabStay" role="tab" aria-selected="true"><span class="mi">🏠</span><span data-t="tabStay">Nơi lưu trú</span></button><button type="button" class="mtab" id="tabSvc" role="tab" aria-selected="false"><span class="mi">🛎️</span><span data-t="tabSvc">Dịch vụ</span></button></div>
+    <div id="stayBox">
     <div class="sbar">
-      <label class="seg"><span class="sl" data-t="ciA">Ngày nhận phòng</span><input type="date" id="fIn" data-ta="ciA" aria-label="Ngày nhận phòng"></label>
-      <label class="seg"><span class="sl" data-t="coA">Ngày trả phòng</span><input type="date" id="fOut" data-ta="coA" aria-label="Ngày trả phòng"></label>
-      <div class="seg"><span class="sl" data-t="priceL">Giá</span><span class="segrow"><select id="fUnit" data-ta="priceBy" aria-label="Tính giá theo"><option value="night" data-t="byNight">Theo đêm</option><option value="month" data-t="byMonth">Theo tháng</option></select><select id="fMax" data-ta="maxPrice" aria-label="Giá tối đa"></select></span></div>
-      <label class="seg"><span class="sl" data-t="codeL">Mã căn</span><input type="search" id="fQ" data-tp="search" data-ta="search" placeholder="Tìm mã căn, vd GH6" aria-label="Tìm mã căn"></label>
+      <label class="seg"><span class="sl" data-t="whereL">Địa điểm</span><select id="fZoneSel" data-ta="whereL" aria-label="Địa điểm"></select></label>
+      <label class="seg"><span class="sl" data-t="ciA">Nhận phòng</span><input type="date" id="fIn" data-ta="ciA" aria-label="Ngày nhận phòng"></label>
+      <label class="seg"><span class="sl" data-t="coA">Trả phòng</span><input type="date" id="fOut" data-ta="coA" aria-label="Ngày trả phòng"></label>
+      <label class="seg"><span class="sl" data-t="typeSel">Loại căn</span><select id="fBedSel" data-ta="typeSel" aria-label="Loại căn"></select></label>
       <button type="button" class="sgo" id="sGo" data-ta="searchBtn" aria-label="Tìm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span data-t="searchBtn">Tìm</span></button>
     </div>
-    <div class="frow brow"><span class="lbl" data-t="bedL">Phòng ngủ</span><span class="frow" id="fBed"></span><button class="chip" id="fReset" type="button" data-t="reset">Bỏ lọc</button></div>
+    <div class="frow brow"><span class="lbl" data-t="priceL">Giá</span><select id="fUnit" data-ta="priceBy" aria-label="Tính giá theo"><option value="night" data-t="byNight">Theo đêm</option><option value="month" data-t="byMonth">Theo tháng</option></select><select id="fMax" data-ta="maxPrice" aria-label="Giá tối đa"></select><input type="search" id="fQ" data-tp="search" data-ta="search" placeholder="Tìm mã căn, vd GH6" aria-label="Tìm mã căn"><button class="chip" id="fReset" type="button" data-t="reset">Bỏ lọc</button></div>
+    <span id="fZone" hidden></span><span id="fBed" hidden></span>
+    </div>
   </div>
+  <div id="svcBox" hidden></div>
 
   <p class="result" id="result"></p>
   <div class="grid" id="grid"></div>
@@ -374,6 +384,21 @@ function openHelp(){ let bg = $("hpBg"); if (bg) bg.remove(); bg = document.crea
    <div class="acts"><button class="btn pri" type="button" id="hpClose">${esc(T("close"))}</button></div></div>`;
   document.body.appendChild(bg); bg.addEventListener("click", ev=>{ if (ev.target===bg || ev.target.id==="hpClose") bg.remove(); }); }
 document.addEventListener("click", e=>{ const a = e.target.closest("[data-help]"); if (!a) return; e.preventDefault(); const m=$("umMenu"); if (m) m.hidden = true; openHelp(); });
+Object.assign(I18.vi,{"lede":"Căn hộ cho thuê ngày và tháng tại Thủ Đức. Chọn địa điểm, ngày ở và loại căn để xem ngay những căn còn trống.", "tabStay": "Nơi lưu trú", "tabSvc": "Dịch vụ", "whereL": "Địa điểm", "anyZone": "Tất cả phân khu", "typeSel": "Loại căn", "anyType": "Tất cả loại căn", "svcT": "Dịch vụ", "svcP": "Danh sách dịch vụ đang được cập nhật. Bạn cần thêm dịch vụ gì trong thời gian ở (dọn phòng, giặt ủi, đưa đón…), nhắn tư vấn để được báo cụ thể."});
+Object.assign(I18.en,{"lede":"Daily and monthly apartment rentals in Thu Duc. Pick an area, your dates and apartment type to see what's available.", "tabStay": "Stays", "tabSvc": "Services", "whereL": "Where", "anyZone": "All areas", "typeSel": "Type", "anyType": "Any type", "svcT": "Services", "svcP": "Our services list is being updated. If you need anything during your stay (cleaning, laundry, transfers…), message an advisor for details."});
+Object.assign(I18.zh,{"lede":"守德市日租、月租公寓。选择小区、入住日期和户型，即可查看可订房源。", "tabStay": "住宿", "tabSvc": "服务", "whereL": "地点", "anyZone": "所有小区", "typeSel": "户型", "anyType": "所有户型", "svcT": "服务", "svcP": "服务列表正在更新。入住期间如需其他服务（清洁、洗衣、接送等），请联系顾问了解详情。"});
+Object.assign(I18.ru,{"lede":"Посуточная и помесячная аренда квартир в Тху Дык. Выберите район, даты и тип квартиры, чтобы увидеть свободные варианты.", "tabStay": "Жильё", "tabSvc": "Услуги", "whereL": "Где", "anyZone": "Все районы", "typeSel": "Тип", "anyType": "Любой тип", "svcT": "Услуги", "svcP": "Список услуг обновляется. Если во время проживания вам что-то нужно (уборка, стирка, трансфер…), напишите менеджеру."});
+Object.assign(I18.ko,{"lede":"투득의 일·월 단위 아파트 임대. 단지, 날짜, 유형을 선택하면 바로 빈 집을 볼 수 있습니다.", "tabStay": "숙소", "tabSvc": "서비스", "whereL": "위치", "anyZone": "전체 단지", "typeSel": "유형", "anyType": "전체 유형", "svcT": "서비스", "svcP": "서비스 목록을 업데이트하고 있습니다. 숙박 중 필요한 것(청소, 세탁, 픽업 등)이 있으면 상담원에게 문의하세요."});
+Object.assign(I18.ja,{"lede":"トゥードゥックの日貸し・月貸しアパート。エリア・日付・タイプを選ぶと空いている物件がすぐ表示されます。", "tabStay": "宿泊", "tabSvc": "サービス", "whereL": "エリア", "anyZone": "すべてのエリア", "typeSel": "タイプ", "anyType": "すべてのタイプ", "svcT": "サービス", "svcP": "サービス一覧は更新中です。滞在中に必要なこと（清掃・洗濯・送迎など）があれば、担当者にご連絡ください。"});
+function syncSel(){ const z=$("fZoneSel"), b=$("fBedSel"); if (!z||!b) return;
+  z.innerHTML = [["",T("anyZone")], ...ZORDER.filter(x=>units.some(u=>u.z===x)).map(x=>[x,zoneL(x)])].map(([v,l])=>`<option value="${esc(v)}" ${F.zone===v?"selected":""}>${esc(l)}</option>`).join("");
+  b.innerHTML = [["",T("anyType")], ...[0,1,2,3,4].filter(n=>units.some(u=>bed(u.t)===n)).map(n=>[String(n), n===0?typeL("Studio"):typeL(n+"PN")])].map(([v,l])=>`<option value="${esc(v)}" ${F.bed===v?"selected":""}>${esc(l)}</option>`).join(""); }
+document.addEventListener("change", e=>{ if (e.target.id==="fZoneSel"){ F.zone=e.target.value; draw(); } else if (e.target.id==="fBedSel"){ F.bed=e.target.value; draw(); } });
+function setTab(t){ const svc = t==="svc"; $("tabStay").setAttribute("aria-selected", String(!svc)); $("tabSvc").setAttribute("aria-selected", String(svc));
+  $("stayBox").hidden = svc; $("result").hidden = svc; $("grid").hidden = svc; $("svcBox").hidden = !svc;
+  if (svc){ const L = (DATA.contacts||[]).filter(c=>(c.phone||"").replace(/\D/g,"").length>=9);
+    $("svcBox").innerHTML = `<div style="max-width:640px;margin:18px auto 0;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px"><h2 style="font:600 20px var(--f-display);margin:0 0 6px">${esc(T("svcT"))}</h2><p style="color:var(--ink2);margin:0 0 12px">${esc(T("svcP"))}</p>${L.length?`<textarea id="svcMsg" hidden>${esc(T("hpGreet"))}</textarea>${contactRows("svcMsg","svcNote")}<p id="svcNote" style="font-size:13px;color:var(--park);margin:4px 0 0"></p>`:""}</div>`; } }
+document.addEventListener("click", e=>{ if (e.target.closest("#tabStay")) setTab("stay"); else if (e.target.closest("#tabSvc")) setTab("svc"); });
 function umFill(){ const m = $("umMenu"); if (!m) return;
   const c = (DATA.contacts||[]).find(x=>(x.phone||"").replace(/\D/g,"").length>=9); const z = c ? "https://zalo.me/"+c.phone.replace(/\D/g,"").replace(/^84/,"0") : "";
   m.innerHTML = `<a href="#" data-help="1"><b>${esc(T("umHelp"))}</b><span>${esc(T("umHelpS"))}</span></a><hr><a href="https://claude.ai/artifact/RBRpwFbFRBW89X7HXqKsvR" target="_blank" rel="noopener"><b>${esc(T("umLogin"))}</b><span>${esc(T("umLoginS"))}</span></a>${z?`<hr><a href="${z}" target="_blank" rel="noopener"><b>${esc(T("umList"))}</b><span>${esc(T("umListS"))}</span></a>`:""}`; }
@@ -475,7 +500,7 @@ function card(u){
 function draw(){
   chips($("fZone"), [["",T("all")], ...ZORDER.filter(z=>units.some(u=>u.z===z)).map(z=>[z,zoneL(z)])], "zone");
   chips($("fBed"), [["",T("all")], ...[0,1,2,3,4].filter(b=>units.some(u=>bed(u.t)===b)).map(b=>[String(b), b===0?typeL("Studio"):typeL(b+"PN")])], "bed");
-  maxOpts();
+  maxOpts(); syncSel();
   const list = filtered();
   $("grid").innerHTML = list.map(card).join("") || `<div class="empty">${esc(T("empty"))}</div>`;
   $("result").textContent = T("result",{n:list.length,t:units.length}) + (F.ci ? T("resultDates") : "");
