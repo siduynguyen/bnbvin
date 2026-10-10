@@ -1,0 +1,16 @@
+{
+  "name": "bnbvin · Căn hộ cho thuê Vinhomes Grand Park",
+  "short_name": "bnbvin",
+  "description": "Căn hộ cho thuê ngày, tháng tại Vinhomes Grand Park. Xem ảnh, giá và lịch trống.",
+  "lang": "vi",
+  "start_url": "/?src=app",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#F2F5F1",
+  "theme_color": "#1E6A4E",
+  "icons": [
+    {"src": "/logo/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "/logo/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "/logo/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}
