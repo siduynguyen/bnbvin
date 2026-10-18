@@ -9,6 +9,7 @@ Biến cần điền trong Worker (Settings → Variables and Secrets):
 | Tên | Loại | Ghi chú |
 |---|---|---|
 | ANTHROPIC_API_KEY | Secret | console.anthropic.com → API keys |
+| NTFY_TOPIC | Secret | tên kênh bí mật đã đăng ký trong app ntfy |
 | WHATSAPP_PHONE | Text | số WhatsApp nhận báo đơn, dạng +84365329311 |
 | WHATSAPP_APIKEY | Secret | lấy miễn phí từ CallMeBot (xem callmebot.com/blog/free-api-whatsapp-messages) |
 | TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID | | tuỳ chọn, không dùng ở Việt Nam |

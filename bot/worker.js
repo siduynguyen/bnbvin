@@ -8,6 +8,7 @@
  *
  * Biến môi trường (Cloudflare → Worker → Settings → Variables and Secrets):
  *   ANTHROPIC_API_KEY   (secret, bắt buộc)
+ *   NTFY_TOPIC (secret)                                → thông báo đẩy qua app ntfy
  *   WHATSAPP_PHONE + WHATSAPP_APIKEY (secret)          → báo qua WhatsApp (CallMeBot)
  *   TELEGRAM_BOT_TOKEN  (secret)  + TELEGRAM_CHAT_ID   → báo qua Telegram (tuỳ chọn)
  *   RESEND_API_KEY      (secret)  + EMAIL_TO           → báo qua email (resend.com)
@@ -40,7 +41,7 @@ export default {
     if (req.method === "OPTIONS") return new Response(null, { headers: cors });
     const url = new URL(req.url);
     if (req.method === "GET" && url.pathname === "/health") {
-      return json({ ok: true, model: env.MODEL || "claude-haiku-5-5", ai: !!env.ANTHROPIC_API_KEY, whatsapp: !!(env.WHATSAPP_PHONE && env.WHATSAPP_APIKEY),
+      return json({ ok: true, model: env.MODEL || "claude-haiku-5-5", ai: !!env.ANTHROPIC_API_KEY, ntfy: !!env.NTFY_TOPIC, whatsapp: !!(env.WHATSAPP_PHONE && env.WHATSAPP_APIKEY),
         telegram: !!(env.TELEGRAM_BOT_TOKEN && env.TELEGRAM_CHAT_ID), email: !!(env.RESEND_API_KEY && env.EMAIL_TO) });
     }
     // Cài đặt Telegram: nhắn /start cho bot của bạn rồi mở /telegram-id để lấy chat id.
@@ -308,6 +309,14 @@ async function notify(env, h, transcript) {
   ].filter(Boolean);
   const text = lines.join("\n");
   const jobs = [];
+  // Thông báo đẩy lên điện thoại qua app ntfy (miễn phí, không cần tài khoản)
+  if (env.NTFY_TOPIC) {
+    jobs.push(fetch("https://ntfy.sh/" + encodeURIComponent(env.NTFY_TOPIC), {
+      method: "POST",
+      headers: { "Title": `Giu cho ${h.ref} - ${h.unit}`.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/đ/g, "d").replace(/Đ/g, "D"), "Priority": "high", "Tags": "house" },
+      body: text + (transcript ? "\n\n— Hội thoại —\n" + transcript.slice(0, 2000) : ""),
+    }).then(r => r.ok ? "ntfy" : null).catch(() => null));
+  }
   // WhatsApp qua CallMeBot (miễn phí, gửi tới chính số WhatsApp của chủ nhà)
   if (env.WHATSAPP_PHONE && env.WHATSAPP_APIKEY) {
     const waText = (text + (transcript ? "\n\n— Hội thoại —\n" + transcript : "")).slice(0, 1500);
