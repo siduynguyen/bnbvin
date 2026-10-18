@@ -4,11 +4,12 @@
  * Khách chat trên bnbvin.com → Worker gọi Claude (Anthropic API) với dữ liệu căn hộ
  * lấy từ https://bnbvin.com/data.json và ghi chú https://bnbvin.com/kb.md.
  * Bot kiểm tra lịch trống bằng công cụ, và khi khách chốt thì tạo YÊU CẦU GIỮ CHỖ
- * (chưa xác nhận) rồi báo chủ nhà qua Telegram và email.
+ * (chưa xác nhận) rồi báo chủ nhà qua WhatsApp và email.
  *
  * Biến môi trường (Cloudflare → Worker → Settings → Variables and Secrets):
  *   ANTHROPIC_API_KEY   (secret, bắt buộc)
- *   TELEGRAM_BOT_TOKEN  (secret)  + TELEGRAM_CHAT_ID   → báo qua Telegram
+ *   WHATSAPP_PHONE + WHATSAPP_APIKEY (secret)          → báo qua WhatsApp (CallMeBot)
+ *   TELEGRAM_BOT_TOKEN  (secret)  + TELEGRAM_CHAT_ID   → báo qua Telegram (tuỳ chọn)
  *   RESEND_API_KEY      (secret)  + EMAIL_TO           → báo qua email (resend.com)
  *   EMAIL_FROM          (tuỳ chọn, mặc định "BnbVin Bot <onboarding@resend.dev>")
  *   MODEL               (tuỳ chọn, mặc định claude-haiku-5-5)
@@ -39,7 +40,7 @@ export default {
     if (req.method === "OPTIONS") return new Response(null, { headers: cors });
     const url = new URL(req.url);
     if (req.method === "GET" && url.pathname === "/health") {
-      return json({ ok: true, model: env.MODEL || "claude-haiku-5-5", ai: !!env.ANTHROPIC_API_KEY,
+      return json({ ok: true, model: env.MODEL || "claude-haiku-5-5", ai: !!env.ANTHROPIC_API_KEY, whatsapp: !!(env.WHATSAPP_PHONE && env.WHATSAPP_APIKEY),
         telegram: !!(env.TELEGRAM_BOT_TOKEN && env.TELEGRAM_CHAT_ID), email: !!(env.RESEND_API_KEY && env.EMAIL_TO) });
     }
     // Cài đặt Telegram: nhắn /start cho bot của bạn rồi mở /telegram-id để lấy chat id.
@@ -307,6 +308,14 @@ async function notify(env, h, transcript) {
   ].filter(Boolean);
   const text = lines.join("\n");
   const jobs = [];
+  // WhatsApp qua CallMeBot (miễn phí, gửi tới chính số WhatsApp của chủ nhà)
+  if (env.WHATSAPP_PHONE && env.WHATSAPP_APIKEY) {
+    const waText = (text + (transcript ? "\n\n— Hội thoại —\n" + transcript : "")).slice(0, 1500);
+    const q = new URLSearchParams({ phone: env.WHATSAPP_PHONE.replace(/[^\d+]/g, ""), text: waText, apikey: env.WHATSAPP_APIKEY });
+    jobs.push(fetch("https://api.callmebot.com/whatsapp.php?" + q.toString())
+      .then(async r => { const t = await r.text(); return r.ok && !/error|invalid/i.test(t.slice(0, 300)) ? "whatsapp" : null; })
+      .catch(() => null));
+  }
   if (env.TELEGRAM_BOT_TOKEN && env.TELEGRAM_CHAT_ID) {
     jobs.push(fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
       method: "POST", headers: { "Content-Type": "application/json" },

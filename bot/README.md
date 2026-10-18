@@ -9,10 +9,11 @@ Biến cần điền trong Worker (Settings → Variables and Secrets):
 | Tên | Loại | Ghi chú |
 |---|---|---|
 | ANTHROPIC_API_KEY | Secret | console.anthropic.com → API keys |
-| TELEGRAM_BOT_TOKEN | Secret | từ @BotFather |
-| TELEGRAM_CHAT_ID | Text | nhắn /start cho bot, mở `<worker>/telegram-id` |
+| WHATSAPP_PHONE | Text | số WhatsApp nhận báo đơn, dạng +84365329311 |
+| WHATSAPP_APIKEY | Secret | lấy miễn phí từ CallMeBot (xem callmebot.com/blog/free-api-whatsapp-messages) |
+| TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID | | tuỳ chọn, không dùng ở Việt Nam |
 | RESEND_API_KEY | Secret | resend.com → API keys (đăng ký bằng email nhận thông báo) |
 | EMAIL_TO | Text | siduybosch@gmail.com |
 | MODEL | Text | tuỳ chọn, mặc định claude-haiku-5-5 |
 
-Kiểm tra: mở `<worker>/health`, cả `ai`, `telegram`, `email` phải là `true`.
+Kiểm tra: mở `<worker>/health`, `ai`, `whatsapp`, `email` phải là `true`.
