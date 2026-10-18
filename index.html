@@ -750,3 +750,146 @@ openFromHash(); window.addEventListener("hashchange", openFromHash);
   }, true);
 })();
 </script>
+<style>
+/* ---- Trợ lý BnbVin (chat) ---- */
+.bvc-fab{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:20;display:flex;align-items:center;gap:8px;background:var(--park);color:var(--bg);border:0;border-radius:999px;padding:12px 16px 12px 14px;font:600 14.5px var(--f-body);box-shadow:0 6px 20px rgba(0,0,0,.22);cursor:pointer}
+.bvc-fab svg{width:22px;height:22px;flex:none}
+.bvc-fab .dot{width:8px;height:8px;border-radius:50%;background:var(--sun);box-shadow:0 0 0 2px var(--park)}
+body:has(#tray:not([hidden])) .bvc-fab{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+.bvc{position:fixed;z-index:35;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));width:min(400px,calc(100vw - 32px));height:min(640px,calc(100dvh - 32px));background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:18px;box-shadow:0 16px 48px rgba(0,0,0,.28);display:flex;flex-direction:column;overflow:hidden}
+@media (max-width:520px){.bvc{inset:0;width:auto;height:100dvh;border-radius:0;border:0}}
+.bvc-hd{display:flex;align-items:center;gap:10px;padding:12px 12px 12px 16px;border-bottom:1px solid var(--line);background:var(--park);color:var(--bg)}
+.bvc-hd b{font:600 15.5px var(--f-display);display:block}
+.bvc-hd small{opacity:.85;font-size:12.5px}
+.bvc-hd .av{width:34px;height:34px;border-radius:50%;background:var(--bg);color:var(--park);display:grid;place-items:center;font:700 14px var(--f-display);flex:none}
+.bvc-x{margin-left:auto;background:transparent;border:0;color:inherit;width:36px;height:36px;border-radius:10px;font-size:22px;line-height:1;cursor:pointer}
+.bvc-log{flex:1;overflow-y:auto;padding:14px 12px;display:flex;flex-direction:column;gap:8px;background:var(--bg)}
+.bvc-m{max-width:86%;padding:9px 12px;border-radius:14px;font-size:14.5px;line-height:1.5;overflow-wrap:anywhere;white-space:normal}
+.bvc-m.b{align-self:flex-start;background:var(--card);border:1px solid var(--line);border-bottom-left-radius:4px}
+.bvc-m.u{align-self:flex-end;background:var(--park);color:var(--bg);border-bottom-right-radius:4px}
+.bvc-m a{color:var(--park);font-weight:600}
+.bvc-m.u a{color:inherit}
+.bvc-m ul{margin:4px 0;padding-left:18px}
+.bvc-m p{margin:0 0 6px}.bvc-m p:last-child{margin:0}
+.bvc-hold{align-self:stretch;background:var(--sun-soft);border:1px solid var(--sun);border-radius:12px;padding:10px 12px;font-size:13.5px}
+.bvc-hold b{font-family:var(--f-display)}
+.bvc-typing{align-self:flex-start;color:var(--ink2);font-size:13px;padding:4px 6px}
+.bvc-typing i{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--ink2);margin-right:3px;animation:bvcb 1s infinite}
+.bvc-typing i:nth-child(2){animation-delay:.15s}.bvc-typing i:nth-child(3){animation-delay:.3s}
+@keyframes bvcb{0%,80%,100%{opacity:.25}40%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.bvc-typing i{animation:none;opacity:.6}}
+.bvc-q{display:flex;gap:6px;overflow-x:auto;padding:8px 12px 0;background:var(--card);scrollbar-width:none}
+.bvc-q button{flex:none;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 11px;font:500 13px var(--f-body);cursor:pointer}
+.bvc-f{display:flex;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));background:var(--card);align-items:flex-end}
+.bvc-f textarea{flex:1;resize:none;font:15px/1.4 var(--f-body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:9px 12px;max-height:120px;min-height:42px}
+.bvc-f button{flex:none;width:42px;height:42px;border-radius:50%;border:0;background:var(--park);color:var(--bg);cursor:pointer;display:grid;place-items:center}
+.bvc-f button:disabled{opacity:.45;cursor:default}
+.bvc-note{font-size:11.5px;color:var(--ink2);text-align:center;padding:0 12px 8px;background:var(--card)}
+</style>
+<button class="bvc-fab" id="bvcFab" type="button" hidden aria-haspopup="dialog" aria-controls="bvc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg><span id="bvcFabT">Hỏi trợ lý</span><span class="dot" aria-hidden="true"></span></button>
+<section class="bvc" id="bvc" role="dialog" aria-modal="false" aria-labelledby="bvcT" hidden>
+  <div class="bvc-hd"><div class="av" aria-hidden="true">BV</div><div><b id="bvcT">Trợ lý BnbVin</b><small id="bvcS">Trả lời ngay, 24/7</small></div><button class="bvc-x" id="bvcX" type="button" aria-label="Đóng">×</button></div>
+  <div class="bvc-log" id="bvcLog" aria-live="polite"></div>
+  <div class="bvc-q" id="bvcQ"></div>
+  <form class="bvc-f" id="bvcF"><textarea id="bvcIn" rows="1" aria-label="Tin nhắn"></textarea><button id="bvcGo" type="submit" aria-label="Gửi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></form>
+  <div class="bvc-note" id="bvcNote"></div>
+</section>
+<script>
+/* Trợ lý BnbVin: khung chat gọi máy chủ bot (bot/worker.js). Để trống BOT_URL thì ẩn nút chat. */
+(function(){
+  var BOT_URL = "";
+  if (!BOT_URL) return;
+  var TX = {
+    vi:{see:"Xem ảnh",fab:"Hỏi trợ lý",sub:"Trả lời ngay, 24/7",ph:"Hỏi phòng trống, giá, dịch vụ…",hi:"Xin chào 👋 Mình là trợ lý BnbVin. Bạn cần thuê căn hộ Vinhomes Grand Park ngày nào, mấy khách? Mình kiểm tra phòng trống và báo giá ngay.",q:["Tối nay còn căn 2PN không?","Giá thuê tháng căn 1PN?","Có đưa đón sân bay không?","Tôi muốn đặt phòng"],err:"Xin lỗi, chưa gửi được. Bạn thử lại, hoặc nhắn Zalo cho tư vấn ở cuối trang nhé.",busy:"Bạn nhắn nhanh quá, đợi một chút rồi thử lại nhé.",note:"Trợ lý AI có thể nhầm. Giá là tạm tính, tư vấn sẽ xác nhận.",hold:"Đã gửi yêu cầu giữ chỗ",holdP:"Tư vấn sẽ liên hệ bạn để xác nhận và hướng dẫn đặt cọc.",close:"Đóng",send:"Gửi"},
+    en:{see:"Photos",fab:"Ask assistant",sub:"Instant replies, 24/7",ph:"Ask about availability, prices…",hi:"Hi 👋 I'm the BnbVin assistant. Which dates and how many guests? I'll check availability at Vinhomes Grand Park and quote right away.",q:["Any 2-bedroom free tonight?","Monthly price for 1-bedroom?","Airport pickup?","I'd like to book"],err:"Sorry, that didn't go through. Try again or message an advisor on WhatsApp/Zalo below.",busy:"Too many messages, please wait a moment.",note:"AI assistant, may make mistakes. Prices are estimates confirmed by an advisor.",hold:"Booking request sent",holdP:"An advisor will contact you to confirm and arrange the deposit.",close:"Close",send:"Send"},
+    zh:{see:"看图",fab:"咨询助手",sub:"24小时即时回复",ph:"咨询空房、价格、服务…",hi:"您好 👋 我是 BnbVin 助手。请问您想哪天入住、几位客人？我马上为您查询 Vinhomes Grand Park 的空房和价格。",q:["今晚有两房吗？","一房月租多少？","有机场接送吗？","我想预订"],err:"抱歉，发送失败。请重试，或通过页面底部的微信/WhatsApp联系顾问。",busy:"消息太频繁，请稍后再试。",note:"AI助手可能出错。价格为预估，以顾问确认为准。",hold:"已提交预订请求",holdP:"顾问会联系您确认并安排押金。",close:"关闭",send:"发送"},
+    ru:{see:"Фото",fab:"Спросить",sub:"Ответ сразу, 24/7",ph:"Свободные даты, цены, услуги…",hi:"Здравствуйте 👋 Я ассистент BnbVin. На какие даты и сколько гостей? Проверю свободные квартиры в Vinhomes Grand Park и назову цену.",q:["Есть 2-комнатная на сегодня?","Цена за месяц, 1 спальня?","Трансфер из аэропорта?","Хочу забронировать"],err:"Не удалось отправить. Попробуйте ещё раз или напишите менеджеру в WhatsApp/Zalo внизу страницы.",busy:"Слишком много сообщений, подождите немного.",note:"ИИ-ассистент может ошибаться. Цены предварительные.",hold:"Запрос на бронь отправлен",holdP:"Менеджер свяжется с вами для подтверждения и депозита.",close:"Закрыть",send:"Отправить"},
+    ko:{see:"사진",fab:"상담하기",sub:"24시간 즉시 답변",ph:"빈방, 가격, 서비스 문의…",hi:"안녕하세요 👋 BnbVin 도우미입니다. 언제, 몇 분이 머무실 예정인가요? Vinhomes Grand Park 빈방과 가격을 바로 알려드릴게요.",q:["오늘 밤 투룸 있나요?","원룸 월세는?","공항 픽업 되나요?","예약하고 싶어요"],err:"전송에 실패했습니다. 다시 시도하시거나 아래 WhatsApp/Zalo로 문의해 주세요.",busy:"메시지가 너무 많습니다. 잠시 후 다시 시도해 주세요.",note:"AI 도우미는 실수할 수 있습니다. 가격은 예상가입니다.",hold:"예약 요청 완료",holdP:"상담원이 확인 및 보증금 안내를 위해 연락드립니다.",close:"닫기",send:"보내기"},
+    ja:{see:"写真",fab:"質問する",sub:"24時間すぐ返信",ph:"空室・料金・サービスなど…",hi:"こんにちは 👋 BnbVinアシスタントです。ご希望の日程と人数を教えてください。Vinhomes Grand Parkの空室と料金をすぐにお調べします。",q:["今夜2LDKは空いてますか？","1LDKの月額は？","空港送迎はありますか？","予約したいです"],err:"送信できませんでした。もう一度お試しいただくか、下のWhatsApp/Zaloでご連絡ください。",busy:"送信が多すぎます。少し待ってからお試しください。",note:"AIアシスタントは間違うことがあります。料金は概算です。",hold:"予約リクエストを送信しました",holdP:"担当者が確認とデポジットのご案内のためご連絡します。",close:"閉じる",send:"送信"}
+  };
+  var lang = function(){ try { return (typeof LANG!=="undefined" && TX[LANG]) ? LANG : "vi"; } catch(e){ return "vi"; } };
+  var t = function(k){ return (TX[lang()]||TX.vi)[k]; };
+  var $ = function(id){ return document.getElementById(id); };
+  var fab=$("bvcFab"), box=$("bvc"), log=$("bvcLog"), inp=$("bvcIn"), go=$("bvcGo"), form=$("bvcF"), qs=$("bvcQ");
+  var KEY="bvc.hist", hist=[], holds=[], sending=false;
+  try { var s = JSON.parse(sessionStorage.getItem(KEY)||"null"); if (s && Array.isArray(s.h)) { hist = s.h; holds = s.b||[]; } } catch(e){}
+  var save = function(){ try { sessionStorage.setItem(KEY, JSON.stringify({h:hist.slice(-40), b:holds})); } catch(e){} };
+  var ev = function(n,p){ try { if (window.gtag) gtag("event", n, p||{}); } catch(e){} };
+
+  function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+  function md(text){
+    var lines = esc(text).split(/\n/), out = [], ul = false;
+    var inline = function(s){
+      return s.replace(/\*\*(.+?)\*\*/g,"<b>$1</b>")
+        .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, function(_,a,u){ return link(u,a); })
+        .replace(/(^|[\s(])(https?:\/\/[^\s<)]+)/g, function(_,p,u){ return p+link(u); });
+    };
+    function link(u,a){
+      var m = u.match(/^https?:\/\/(?:www\.)?bnbvin\.com\/?#([\w-]+)$/);
+      if (m) return '<a href="#'+m[1]+'" data-unit="'+m[1]+'">'+(a||unitName(m[1]))+'</a>';
+      return '<a href="'+u+'" target="_blank" rel="noopener">'+(a||u)+'</a>';
+    }
+    lines.forEach(function(l){
+      var b = l.match(/^\s*[-•*]\s+(.*)/);
+      if (b){ if(!ul){ out.push("<ul>"); ul=true; } out.push("<li>"+inline(b[1])+"</li>"); return; }
+      if (ul){ out.push("</ul>"); ul=false; }
+      if (l.trim()) out.push("<p>"+inline(l)+"</p>");
+    });
+    if (ul) out.push("</ul>");
+    return out.join("");
+  }
+  function unitName(id){ return "📷 "+t("see"); }
+
+  function bubble(role, text){ var d=document.createElement("div"); d.className="bvc-m "+(role==="user"?"u":"b"); if (role==="user") d.textContent=text; else d.innerHTML=md(text); log.appendChild(d); log.scrollTop=log.scrollHeight; }
+  function holdCard(b){ var d=document.createElement("div"); d.className="bvc-hold"; d.innerHTML="✅ <b>"+esc(t("hold"))+" · "+esc(b.ref)+"</b><br>"+esc(b.unit)+" · "+esc(b.check_in)+" → "+esc(b.check_out)+(b.estimate?" · ~"+esc(b.estimate):"")+"<br>"+esc(t("holdP")); log.appendChild(d); log.scrollTop=log.scrollHeight; }
+  function render(){
+    log.innerHTML="";
+    bubble("assistant", t("hi"));
+    hist.forEach(function(m){ bubble(m.role, m.content); if (m.hold!=null && holds[m.hold]) holdCard(holds[m.hold]); });
+    qs.innerHTML=""; qs.hidden = hist.length>0;
+    t("q").forEach(function(q){ var b=document.createElement("button"); b.type="button"; b.textContent=q; b.onclick=function(){ send(q); }; qs.appendChild(b); });
+    $("bvcFabT").textContent=t("fab"); $("bvcS").textContent=t("sub"); inp.placeholder=t("ph"); $("bvcNote").textContent=t("note");
+    $("bvcX").setAttribute("aria-label",t("close")); go.setAttribute("aria-label",t("send"));
+  }
+  function open(){ box.hidden=false; fab.hidden=true; render(); setTimeout(function(){ inp.focus(); },50); ev("chat_open"); }
+  function close(){ box.hidden=true; fab.hidden=false; fab.focus(); }
+
+  function send(text){
+    text = String(text||"").trim(); if (!text || sending) return;
+    sending=true; go.disabled=true; qs.hidden=true;
+    hist.push({role:"user", content:text}); bubble("user", text); inp.value=""; grow(); save();
+    var ty=document.createElement("div"); ty.className="bvc-typing"; ty.innerHTML="<i></i><i></i><i></i>"; log.appendChild(ty); log.scrollTop=log.scrollHeight;
+    var payload = { lang: lang(), messages: hist.slice(-24).map(function(m){ return {role:m.role, content:m.content}; }) };
+    ev("chat_message", { turn: hist.filter(function(m){return m.role==="user";}).length });
+    fetch(BOT_URL.replace(/\/$/,"")+"/chat", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(payload) })
+      .then(function(r){ return r.json().catch(function(){ return {}; }).then(function(j){ return {s:r.status, j:j}; }); })
+      .then(function(x){
+        ty.remove();
+        var reply = x.j.reply || (x.s===429 ? t("busy") : t("err"));
+        var m = {role:"assistant", content: reply};
+        if (x.j.booking){ holds.push(x.j.booking); m.hold = holds.length-1; ev("chat_booking_request", { unit: x.j.booking.unit }); }
+        if (x.j.reply) hist.push(m);
+        bubble("assistant", reply); if (m.hold!=null) holdCard(holds[m.hold]);
+        save();
+      })
+      .catch(function(){ ty.remove(); bubble("assistant", t("err")); })
+      .then(function(){ sending=false; go.disabled=false; });
+  }
+  function grow(){ inp.style.height="auto"; inp.style.height=Math.min(inp.scrollHeight,120)+"px"; }
+
+  fab.onclick=open; $("bvcX").onclick=close;
+  form.onsubmit=function(e){ e.preventDefault(); send(inp.value); };
+  inp.addEventListener("input", grow);
+  inp.addEventListener("keydown", function(e){ if (e.key==="Enter" && !e.shiftKey && !e.isComposing){ e.preventDefault(); send(inp.value); } });
+  box.addEventListener("keydown", function(e){ if (e.key==="Escape") close(); });
+  log.addEventListener("click", function(e){
+    var a = e.target.closest && e.target.closest("a[data-unit]"); if (!a) return;
+    e.preventDefault(); ev("chat_view_unit", { unit: a.getAttribute("data-unit") });
+    if (window.innerWidth<=520) close();
+    if (typeof window.openDetail==="function") window.openDetail(a.getAttribute("data-unit")); else location.hash = a.getAttribute("data-unit");
+  });
+  document.addEventListener("click", function(e){ if (e.target.closest && e.target.closest("[data-lang]")) setTimeout(function(){ if (!box.hidden) render(); else $("bvcFabT").textContent=t("fab"); }, 0); });
+  $("bvcFabT").textContent=t("fab");
+  fab.hidden=false;
+})();
+</script>

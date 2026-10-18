@@ -1,0 +1,12 @@
+name = "bnbvin-bot"
+main = "worker.js"
+compatibility_date = "2026-09-01"
+
+[vars]
+MODEL = "claude-haiku-5-5"
+EMAIL_TO = "siduybosch@gmail.com"
+
+# Tuỳ chọn: lưu lại mọi yêu cầu giữ chỗ (tạo KV namespace rồi bỏ dấu # và điền id)
+# [[kv_namespaces]]
+# binding = "HOLDS"
+# id = "..."
