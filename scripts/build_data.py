@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Cập nhật dữ liệu bnbvin.com (DATA trong index.html + data.json) từ app quản lý.
 
-Dùng:  python3 scripts/build_data.py units.json bookings.json settings_main.json
+Dùng:  python3 scripts/build_data.py units.json bookings.json settings_main.json [stats.json]
+       python3 scripts/build_data.py --market stats.json      (chỉ cập nhật tab Thị trường)
 Mỗi tệp là kết quả đọc từ app (dạng {docId: {...}} , [{id, data}] hoặc {documents: [...]}).
 - Lịch bận: mọi booking không huỷ, ngày trả phòng >= hôm qua.
 - Giá, loại, phân khu, số khách… lấy từ app; ảnh giữ nguyên ảnh đang có trên trang.
@@ -84,5 +85,72 @@ def main(units_p, bookings_p, main_p):
     print(f"units={len(new_units)} busy_units={len(busy)} updated={data['updated']}")
 
 
+_ZC = [("solari", "Beverly Solari"), ("beverly", "Beverly"), ("glory", "Glory Heights"), ("origami", "Origami"), ("rainbow", "Rainbow"),
+       ("opus", "Opus One"), ("masteri", "Masteri Centre Point"), ("mcp", "Masteri Centre Point"), ("lumi", "Lumière Boulevard"), ("lbv", "Lumière Boulevard")]
+_ZP = [("bs", "Beverly Solari"), ("be", "Beverly"), ("gh", "Glory Heights"), ("ori", "Origami"), ("os", "Origami")]
+
+
+def _zones(k):
+    """Chuẩn hoá tên khu (gộp 'GH', 'Glory Heights / BS'… về tên phân khu)."""
+    out = []
+    for part in re.split(r"\s*(?:,|/|;|\+|&|\(|\)| hoặc | và )\s*", str(k)):
+        t = part.strip().lower()
+        if not t:
+            continue
+        name = next((v for key, v in _ZC if key in t), None)
+        if not name:
+            t2 = re.sub(r"^the\s+", "", t)
+            name = next((v for key, v in _ZP if t2.startswith(key)), None)
+        if not name and re.match(r"^(khu )?s\d*$", t):
+            name = "Rainbow / Origami"
+        if name and name not in out:
+            out.append(name)
+    return out
+
+
+def _part(x):
+    """Rút gọn số liệu 1 ngày thành dạng công khai: không tên, không số điện thoại, không số liệu nội bộ."""
+    if not x:
+        return None
+    ut, ot = x.get("uniqT") or {}, x.get("oUniqT") or {}
+    z = {}
+    for k, v in (x.get("zonesT") or {}).items():
+        a, b = int((v or {}).get("2PN", 0)), int((v or {}).get("3PN", 0))
+        keys = ["?"] if k == "Không rõ khu" else (_zones(k) or ["?"])
+        for key in keys:
+            o = z.setdefault(key, [0, 0]); o[0] += a; o[1] += b
+    n = x.get("uniq") if x.get("uniq") is not None else x.get("need", 0)
+    o = x.get("oUniq") if x.get("oUniq") is not None else x.get("offer", 0)
+    return {"n": int(n or 0), "n2": int(ut.get("2PN", 0)), "n3": int(ut.get("3PN", 0)),
+            "o": int(o or 0), "o2": int(ot.get("2PN", 0)), "o3": int(ot.get("3PN", 0)), "z": z}
+
+
+def build_market(stats_p):
+    st = docs(stats_p)
+    days = []
+    for d in sorted(st)[-30:]:
+        x = st[d]
+        if not re.match(r"\d{4}-\d{2}-\d{2}$", d) or not (x.get("need") or x.get("offer")):
+            continue
+        bl = x.get("byLen") or {}
+        a = _part(x)
+        a["m"] = int((bl.get("M") or {}).get("uniq") or 0)
+        days.append({"d": d, "partial": bool(x.get("partial")), "all": a, "S": _part(bl.get("S")), "M": _part(bl.get("M"))})
+    vn_now = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None) + datetime.timedelta(hours=7)
+    market = {"updated": vn_now.strftime("%Y-%m-%dT%H:%M"), "days": days}
+    html = (ROOT / "index.html").read_text()
+    blob = json.dumps(market, ensure_ascii=False, separators=(",", ":"))
+    html, k = re.subn(r"const MARKET = .*?;\n", lambda _: "const MARKET = " + blob + ";\n", html, count=1)
+    if not k:
+        raise SystemExit("Không tìm thấy 'const MARKET' trong index.html")
+    (ROOT / "index.html").write_text(html)
+    print(f"market_days={len(days)}")
+
+
 if __name__ == "__main__":
-    main(*sys.argv[1:4])
+    if sys.argv[1:2] == ["--market"]:
+        build_market(sys.argv[2])
+    else:
+        main(*sys.argv[1:4])
+        if len(sys.argv) > 4:
+            build_market(sys.argv[4])
