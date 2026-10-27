@@ -121,8 +121,10 @@ def _part(x):
             o = z.setdefault(key, [0, 0]); o[0] += a; o[1] += b
     n = x.get("uniq") if x.get("uniq") is not None else x.get("need", 0)
     o = x.get("oUniq") if x.get("oUniq") is not None else x.get("offer", 0)
+    sm = x.get("sm") or {}
     return {"n": int(n or 0), "n2": int(ut.get("2PN", 0)), "n3": int(ut.get("3PN", 0)),
-            "o": int(o or 0), "o2": int(ot.get("2PN", 0)), "o3": int(ot.get("3PN", 0)), "z": z}
+            "o": int(o or 0), "o2": int(ot.get("2PN", 0)), "o3": int(ot.get("3PN", 0)), "z": z,
+            "s1": [int(sm.get("uniq") or 0), int(sm.get("oUniq") or 0)] if (sm.get("need") or sm.get("offer")) else None}
 
 
 def build_market(stats_p):
