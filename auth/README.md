@@ -20,5 +20,5 @@ Mở `bnbvin.com/admin.html`, nhập địa chỉ Worker + ADMIN_KEY: xem danh s
 3. Worker → Variables: Text `GOOGLE_CLIENT_ID` = Client ID đó. Đưa Client ID cho Claude để gắn vào trang (`GOOGLE_CLIENT_ID` trong `tpl/thi-truong.tpl.html`).
 Khách đăng nhập Google sẽ được hỏi để lại số Zalo; trang quản trị hiển thị cả email lẫn số Zalo để đối chiếu khi gia hạn.
 
-## Khách quên mật khẩu
-Khách nhắn Zalo từ số đã đăng ký → vào admin.html bấm "Đặt MK" → gửi mật khẩu tạm. Hoặc khách đăng nhập bằng Google.
+## Khách quên mật khẩu (tự động)
+Khi đăng ký bằng SĐT, khách nhập thêm email. Quên mật khẩu: tab "Quên mật khẩu" → nhập SĐT + mật khẩu mới → bấm đăng nhập Google bằng đúng email đó → mật khẩu được đổi. Cần bật đăng nhập Google. Bạn vẫn có thể đặt lại tay ở admin.html.

@@ -76,9 +76,11 @@ export default {
         const b = await body(req), phone = normPhone(b.phone), pw = String(b.password || "");
         if (!phone) return json(req, { error: "Số điện thoại chưa đúng (10 số, bắt đầu bằng 0)." }, 400);
         if (pw.length < 6) return json(req, { error: "Mật khẩu cần ít nhất 6 ký tự." }, 400);
+        const email = String(b.email || "").trim().toLowerCase();
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return json(req, { error: "Vui lòng nhập email (để lấy lại mật khẩu khi cần)." }, 400);
         if (await env.USERS.get("u:" + phone)) return json(req, { error: "Số này đã đăng ký. Hãy đăng nhập." }, 409);
         const salt = crypto.getRandomValues(new Uint8Array(16));
-        const u = { salt: b64(salt), hash: await hashPw(pw, salt), created: Date.now(), trialEnd: Date.now() + Number(env.TRIAL_DAYS || 30) * DAY, paidUntil: 0, name: String(b.name || "").slice(0, 60) };
+        const u = { salt: b64(salt), hash: await hashPw(pw, salt), created: Date.now(), trialEnd: Date.now() + Number(env.TRIAL_DAYS || 30) * DAY, paidUntil: 0, name: String(b.name || "").slice(0, 60), email };
         await env.USERS.put("u:" + phone, JSON.stringify(u));
         return json(req, { token: await makeToken(env, phone), phone, ...status(u) });
       }
@@ -104,6 +106,20 @@ export default {
         let u = await env.USERS.get(id, "json");
         if (!u) { u = { created: Date.now(), trialEnd: Date.now() + Number(env.TRIAL_DAYS || 30) * DAY, paidUntil: 0, name: g.name, email: g.email, contact: "" }; await env.USERS.put(id, JSON.stringify(u)); }
         return json(req, { token: await makeToken(env, id), phone: g.email, needContact: !u.contact, ...status(u) });
+      }
+
+      if (path === "/reset" && req.method === "POST") { // quên mật khẩu: xác minh bằng Google, email phải trùng email lúc đăng ký
+        if (!env.GOOGLE_CLIENT_ID) return json(req, { error: "Chưa bật đăng nhập Google." }, 501);
+        const b = await body(req), phone = normPhone(b.phone), pw = String(b.password || "");
+        if (!phone) return json(req, { error: "Số điện thoại chưa đúng." }, 400);
+        if (pw.length < 6) return json(req, { error: "Mật khẩu cần ít nhất 6 ký tự." }, 400);
+        const g = await verifyGoogle(env, b.credential);
+        if (!g) return json(req, { error: "Không xác minh được tài khoản Google." }, 401);
+        const u = await env.USERS.get("u:" + phone, "json");
+        if (!u || !u.email || u.email !== g.email) return json(req, { error: "Email Google này không trùng với email đã đăng ký cho số điện thoại này." }, 403);
+        const salt = crypto.getRandomValues(new Uint8Array(16)); u.salt = b64(salt); u.hash = await hashPw(pw, salt);
+        await env.USERS.put("u:" + phone, JSON.stringify(u)); await env.USERS.delete("f:" + phone);
+        return json(req, { token: await makeToken(env, phone), phone, ...status(u) });
       }
 
       if (path === "/profile" && req.method === "POST") { // khách để lại số Zalo để bạn đối chiếu khi gia hạn
