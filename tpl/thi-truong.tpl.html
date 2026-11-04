@@ -40,8 +40,11 @@ table{width:100%;border-collapse:collapse;font-size:14px}td,th{padding:6px 4px;b
 <input id="ph" type="tel" inputmode="numeric" placeholder="Số điện thoại" autocomplete="username"><br>
 <input id="pw" type="password" placeholder="Mật khẩu (từ 6 ký tự)" autocomplete="current-password"><br>
 <button class="btn" id="go">Đăng nhập</button>
+<div id="gbtn" style="margin-top:10px;display:flex;justify-content:center"></div>
+<div class="note" style="margin-top:8px">Quên mật khẩu? Nhắn Zalo 0365329311 từ số đã đăng ký để được đặt lại, hoặc đăng nhập bằng Google.</div>
 <div class="err" id="err"></div></div>
 <div class="card" id="acct" hidden><span id="acctTxt" class="sub"></span> <a href="#" id="out" style="float:right;font-size:13px">Đăng xuất</a></div>
+<div class="card" id="ctc" hidden><div class="sub">Để lúc gia hạn bạn đối chiếu nhanh, vui lòng để lại số Zalo:</div><input id="ctcIn" type="tel" placeholder="Số Zalo" style="padding:8px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);margin:6px 0"> <button class="btn" id="ctcGo" style="padding:7px 14px">Lưu</button></div>
 <div class="card" id="exp" hidden><h2>Đã hết hạn dùng thử</h2><div class="sub">Để xem tiếp bản đầy đủ, vui lòng gia hạn 99.000đ/tháng. Số tài khoản và cách gia hạn ở trang đăng ký. Khi chuyển khoản, ghi nội dung: <b>BNBVIN + số điện thoại đăng nhập</b>.</div><p><a class="btn" href="/dang-ky.html">Cách gia hạn</a></p></div>
 <div id="paid" hidden></div>
 
@@ -76,7 +79,7 @@ function render(P){const D=P.days,A=P.ab,pad=n=>n;
  <table style="margin-top:8px"><tr><th>Loại</th><th>Số listing</th>${mo.slice(-6).map(m=>`<th>${m}</th>`).join("")}</tr>${ab}</table>
  <div class="note" style="margin-top:8px">Số listing có khách trong 6 tháng gần nhất: ${A.groups.map(g=>g.label+" "+g.act6).join(" · ")}.</div></div>`;
  $("paid").hidden=false;$("lock").hidden=true}
-const AUTH_URL="";
+const AUTH_URL="", GOOGLE_CLIENT_ID="";
 let mode="L";
 const api=async(p,o,tok)=>{const r=await fetch(AUTH_URL+p,{method:o?"POST":"GET",headers:{"Content-Type":"application/json",...(tok?{Authorization:"Bearer "+tok}:{})},body:o?JSON.stringify(o):undefined});let j={};try{j=await r.json()}catch(e){}return{s:r.status,j}};
 const LS={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},del:k=>{try{localStorage.removeItem(k)}catch(e){}}};
@@ -98,6 +101,9 @@ $("go").onclick=async()=>{
   if(!r.j.token){$("err").textContent=r.j.error||"Có lỗi, vui lòng thử lại.";return}
   LS.set("bnbtok",r.j.token);LS.set("bnbph",r.j.phone);
   await unlock(r.j.token,r.j.phone)};
+function gInit(){if(!GOOGLE_CLIENT_ID||!AUTH_URL)return;const sc=document.createElement("script");sc.src="https://accounts.google.com/gsi/client";sc.async=true;sc.onload=()=>{google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:async x=>{$("err").textContent="";const r=await api("/google",{credential:x.credential});if(!r.j.token){$("err").textContent=r.j.error||"Đăng nhập Google chưa được.";return}LS.set("bnbtok",r.j.token);LS.set("bnbph",r.j.phone);if(r.j.needContact)$("ctc").hidden=false;await unlock(r.j.token,r.j.phone)}});google.accounts.id.renderButton($("gbtn"),{theme:"outline",size:"large",text:"signin_with",locale:"vi"})};document.head.appendChild(sc)}
+gInit();
+$("ctcGo").onclick=async()=>{const r=await api("/profile",{contact:$("ctcIn").value},LS.get("bnbtok"));if(r.j.ok)$("ctc").hidden=true;else alert(r.j.error||"Chưa lưu được")};
 $("pw").onkeydown=$("ph").onkeydown=e=>{if(e.key==="Enter")$("go").click()};
 $("out").onclick=e=>{e.preventDefault();LS.del("bnbtok");location.reload()};
 (async()=>{const t=LS.get("bnbtok");if(t&&AUTH_URL)await unlock(t,LS.get("bnbph")||"")})();

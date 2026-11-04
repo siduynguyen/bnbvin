@@ -9,7 +9,7 @@ async function call(p,b){const r=await fetch($("u").value.replace(/\/$/,"")+p,{m
 const fd=t=>t?new Date(t).toLocaleDateString("vi-VN"):"-";
 async function load(){try{localStorage.setItem("bnba",$("u").value)}catch(e){}
  const j=await call("/admin/users");if(!j.users){$("m").textContent=j.error||"Lỗi";return}$("m").textContent=j.users.length+" người";
- $("t").innerHTML="<tr><th>SĐT</th><th>Đăng ký</th><th>Hạn</th><th>Gói</th><th></th></tr>"+j.users.map(u=>`<tr><td>${u.phone}</td><td>${fd(u.created)}</td><td>${fd(u.until)} (${u.daysLeft} ngày)</td><td>${u.paid?"Trả phí":u.active?"Dùng thử":"Hết hạn"}</td><td><button data-e="${u.phone}">+30 ngày</button><button data-r="${u.phone}">Đặt MK</button><button class="x" data-d="${u.phone}">Xoá</button></td></tr>`).join("")}
+ $("t").innerHTML="<tr><th>SĐT / Email</th><th>Zalo</th><th>Đăng ký</th><th>Hạn</th><th>Gói</th><th></th></tr>"+j.users.map(u=>`<tr><td>${u.phone}</td><td>${u.contact||""}</td><td>${fd(u.created)}</td><td>${fd(u.until)} (${u.daysLeft} ngày)</td><td>${u.paid?"Trả phí":u.active?"Dùng thử":"Hết hạn"}</td><td><button data-e="${u.phone}">+30 ngày</button><button data-r="${u.phone}">Đặt MK</button><button class="x" data-d="${u.phone}">Xoá</button></td></tr>`).join("")}
 $("go").onclick=load;
 $("t").onclick=async e=>{const b=e.target,p=b.dataset.e||b.dataset.r||b.dataset.d;if(!p)return;
  if(b.dataset.e)await call("/admin/extend",{phone:p,days:30});

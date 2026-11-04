@@ -13,3 +13,12 @@ Cách hoạt động: dữ liệu đầy đủ nằm trong trang đã mã hoá; 
 
 ## Quản lý người dùng
 Mở `bnbvin.com/admin.html`, nhập địa chỉ Worker + ADMIN_KEY: xem danh sách, gia hạn 30 ngày sau khi nhận chuyển khoản, đặt lại mật khẩu, xoá.
+
+## Đăng nhập bằng Google (tuỳ chọn)
+1. console.cloud.google.com → APIs & Services → Credentials → Create credentials → OAuth client ID → Web application. Authorized JavaScript origins: `https://bnbvin.com`, `https://www.bnbvin.com`.
+2. Chép Client ID (dạng `xxxx.apps.googleusercontent.com`).
+3. Worker → Variables: Text `GOOGLE_CLIENT_ID` = Client ID đó. Đưa Client ID cho Claude để gắn vào trang (`GOOGLE_CLIENT_ID` trong `tpl/thi-truong.tpl.html`).
+Khách đăng nhập Google sẽ được hỏi để lại số Zalo; trang quản trị hiển thị cả email lẫn số Zalo để đối chiếu khi gia hạn.
+
+## Khách quên mật khẩu
+Khách nhắn Zalo từ số đã đăng ký → vào admin.html bấm "Đặt MK" → gửi mật khẩu tạm. Hoặc khách đăng nhập bằng Google.
