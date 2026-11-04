@@ -1,0 +1,11 @@
+name = "bnbvin-auth"
+main = "worker.js"
+compatibility_date = "2026-09-01"
+
+[vars]
+TRIAL_DAYS = "30"
+
+# Tạo KV namespace tên USERS rồi điền id vào đây
+[[kv_namespaces]]
+binding = "USERS"
+id = "ĐIỀN_ID_KV"

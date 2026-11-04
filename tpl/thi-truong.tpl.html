@@ -15,7 +15,7 @@ h1{font-size:22px;margin:8px 0 4px}h2{font-size:17px;margin:0 0 10px}.sub{color:
 .bars{display:flex;align-items:flex-end;gap:6px;height:110px;margin-top:10px}.bars div{flex:1;text-align:center;font-size:11px;color:var(--ink2)}.bars i{display:block;background:var(--park);border-radius:4px 4px 0 0;margin:0 auto 3px;width:100%;min-height:2px}.bars i.o{background:var(--sun)}
 .pair{display:flex;gap:2px;align-items:flex-end}
 table{width:100%;border-collapse:collapse;font-size:14px}td,th{padding:6px 4px;border-bottom:1px solid var(--line);text-align:right}td:first-child,th:first-child{text-align:left}th{font-size:12px;color:var(--ink2);font-weight:600}
-.lock{text-align:center}.lock input{padding:10px 12px;border:1px solid var(--line);border-radius:10px;font-size:15px;width:100%;max-width:280px;background:var(--bg);color:var(--ink)}
+.lock{text-align:center}.tabs{display:flex;gap:6px;justify-content:center;margin-bottom:10px}.tabs button{border:1px solid var(--line);background:transparent;color:var(--ink2);border-radius:20px;padding:6px 14px;font-size:14px;cursor:pointer}.tabs button.on{background:var(--park);color:#fff;border-color:var(--park)}.lock input{margin-bottom:8px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font-size:15px;width:100%;max-width:280px;background:var(--bg);color:var(--ink)}
 .btn{display:inline-block;background:var(--park);color:#fff;border:0;border-radius:10px;padding:10px 18px;font-weight:600;font-size:15px;text-decoration:none;cursor:pointer;margin:6px 4px}.btn.ghost{background:transparent;color:var(--park);border:1px solid var(--park)}
 .err{color:#c0392b;font-size:13px;min-height:18px}.note{font-size:12px;color:var(--ink2)}
 .leg{font-size:12px;color:var(--ink2);margin-top:6px}.leg b{display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--park);margin:0 4px 0 8px}.leg b.o{background:var(--sun)}
@@ -34,11 +34,15 @@ table{width:100%;border-collapse:collapse;font-size:14px}td,th{padding:6px 4px;b
 <div class="kp"><div><b id="at">–</b><span>listing Airbnb đang có</span></div><div><b id="al">–</b><span>lượt khách ở (review) căn 2PN trong tháng 10</span></div></div>
 <div class="note" style="margin-top:8px">Số liệu thu thập ngày <span id="asnap"></span>. Xem chi tiết theo loại căn và theo tháng ở bản đầy đủ.</div></div>
 
-<div class="card lock" id="lock"><h2>🔒 Bản đầy đủ · 99.000đ/tháng</h2>
-<div class="sub" style="text-align:left;margin-bottom:10px">Gồm: số khách & căn chào thuê 14 ngày chia 2PN/3PN, khách thuê ngắn/dài hạn, khu vực được hỏi nhiều nhất, và thị trường Airbnb theo từng loại căn, từng tháng.</div>
-<input id="pw" type="password" placeholder="Nhập mật khẩu thành viên" autocomplete="off"><br>
-<button class="btn" id="go">Mở khóa</button><a class="btn ghost" href="/dang-ky.html">Đăng ký</a>
+<div class="card lock" id="lock"><h2>🔒 Bản đầy đủ · dùng thử miễn phí 30 ngày</h2>
+<div class="sub" style="text-align:left;margin-bottom:10px">Gồm: số khách & căn chào thuê 14 ngày chia 2PN/3PN, khách thuê ngắn/dài hạn, khu vực được hỏi nhiều nhất, và thị trường Airbnb theo từng loại căn, từng tháng. Sau 30 ngày: 99.000đ/tháng.</div>
+<div class="tabs"><button id="tL" class="on">Đăng nhập</button><button id="tR">Đăng ký</button></div>
+<input id="ph" type="tel" inputmode="numeric" placeholder="Số điện thoại" autocomplete="username"><br>
+<input id="pw" type="password" placeholder="Mật khẩu (từ 6 ký tự)" autocomplete="current-password"><br>
+<button class="btn" id="go">Đăng nhập</button>
 <div class="err" id="err"></div></div>
+<div class="card" id="acct" hidden><span id="acctTxt" class="sub"></span> <a href="#" id="out" style="float:right;font-size:13px">Đăng xuất</a></div>
+<div class="card" id="exp" hidden><h2>Đã hết hạn dùng thử</h2><div class="sub">Để xem tiếp bản đầy đủ, vui lòng gia hạn 99.000đ/tháng. Số tài khoản và cách gia hạn ở trang đăng ký. Khi chuyển khoản, ghi nội dung: <b>BNBVIN + số điện thoại đăng nhập</b>.</div><p><a class="btn" href="/dang-ky.html">Cách gia hạn</a></p></div>
 <div id="paid" hidden></div>
 
 <p class="note">Số liệu mang tính tham khảo, được tổng hợp tự động và có thể sai lệch; không phải tư vấn đầu tư hay cam kết giá. Xem <a href="/dang-ky.html#dieukhoan">điều khoản</a>.</p>
@@ -72,7 +76,29 @@ function render(P){const D=P.days,A=P.ab,pad=n=>n;
  <table style="margin-top:8px"><tr><th>Loại</th><th>Số listing</th>${mo.slice(-6).map(m=>`<th>${m}</th>`).join("")}</tr>${ab}</table>
  <div class="note" style="margin-top:8px">Số listing có khách trong 6 tháng gần nhất: ${A.groups.map(g=>g.label+" "+g.act6).join(" · ")}.</div></div>`;
  $("paid").hidden=false;$("lock").hidden=true}
-async function open(pw,silent){try{render(await dec(pw));try{localStorage.setItem("bnbrp",pw)}catch(e){}}catch(e){if(!silent)$("err").textContent="Mật khẩu chưa đúng.";try{localStorage.removeItem("bnbrp")}catch(e){}}}
-$("go").onclick=()=>open($("pw").value.trim());$("pw").onkeydown=e=>{if(e.key==="Enter")$("go").click()};
-try{const s=localStorage.getItem("bnbrp");if(s)open(s,true)}catch(e){}
+const AUTH_URL="";
+let mode="L";
+const api=async(p,o,tok)=>{const r=await fetch(AUTH_URL+p,{method:o?"POST":"GET",headers:{"Content-Type":"application/json",...(tok?{Authorization:"Bearer "+tok}:{})},body:o?JSON.stringify(o):undefined});let j={};try{j=await r.json()}catch(e){}return{s:r.status,j}};
+const LS={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},del:k=>{try{localStorage.removeItem(k)}catch(e){}}};
+function setMode(m){mode=m;$("tL").className=m==="L"?"on":"";$("tR").className=m==="R"?"on":"";$("go").textContent=m==="L"?"Đăng nhập":"Đăng ký dùng thử 30 ngày";$("pw").autocomplete=m==="L"?"current-password":"new-password";$("err").textContent=""}
+$("tL").onclick=()=>setMode("L");$("tR").onclick=()=>setMode("R");
+function show(st,phone){const d=st.daysLeft;$("acctTxt").textContent=(st.paid?"Đang dùng gói trả phí":"Đang dùng thử")+" · "+phone+" · còn "+d+" ngày";$("acct").hidden=false}
+async function unlock(tok,phone){
+  const r=await api("/key",null,tok);
+  if(r.s===401){LS.del("bnbtok");$("lock").hidden=false;return false}
+  if(r.s===402){$("lock").hidden=true;$("exp").hidden=false;$("acctTxt").textContent=phone;$("acct").hidden=false;return false}
+  if(!r.j.key)return false;
+  try{render(await dec(r.j.key))}catch(e){$("err").textContent="Không mở được dữ liệu, thử lại sau.";return false}
+  show(r.j,phone);return true}
+$("go").onclick=async()=>{
+  if(!AUTH_URL){$("err").textContent="Tính năng đăng nhập đang được chuẩn bị, vui lòng quay lại sau.";return}
+  $("err").textContent="";$("go").disabled=true;
+  const r=await api(mode==="L"?"/login":"/register",{phone:$("ph").value,password:$("pw").value});
+  $("go").disabled=false;
+  if(!r.j.token){$("err").textContent=r.j.error||"Có lỗi, vui lòng thử lại.";return}
+  LS.set("bnbtok",r.j.token);LS.set("bnbph",r.j.phone);
+  await unlock(r.j.token,r.j.phone)};
+$("pw").onkeydown=$("ph").onkeydown=e=>{if(e.key==="Enter")$("go").click()};
+$("out").onclick=e=>{e.preventDefault();LS.del("bnbtok");location.reload()};
+(async()=>{const t=LS.get("bnbtok");if(t&&AUTH_URL)await unlock(t,LS.get("bnbph")||"")})();
 </script></body></html>

@@ -1,0 +1,18 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Quản trị · BnB Vin</title>
+<style>body{font:15px system-ui,sans-serif;max-width:760px;margin:0 auto;padding:16px;background:#F2F5F1;color:#14251E}input{padding:8px;border:1px solid #ccc;border-radius:8px;margin:3px 0;width:100%;box-sizing:border-box}button{background:#1E6A4E;color:#fff;border:0;border-radius:8px;padding:7px 12px;margin:2px;cursor:pointer}table{width:100%;border-collapse:collapse;background:#fff}td,th{padding:6px;border-bottom:1px solid #ddd;text-align:left;font-size:14px}.x{background:#9a3b2e}</style></head><body>
+<h2>Quản trị người dùng</h2>
+<input id="u" placeholder="Địa chỉ Worker (https://bnbvin-auth....workers.dev)"><input id="k" type="password" placeholder="ADMIN_KEY"><button id="go">Tải danh sách</button> <span id="m"></span>
+<table id="t"></table>
+<script>
+const $=i=>document.getElementById(i);try{$("u").value=localStorage.getItem("bnba")||""}catch(e){}
+async function call(p,b){const r=await fetch($("u").value.replace(/\/$/,"")+p,{method:b?"POST":"GET",headers:{"X-Admin-Key":$("k").value,"Content-Type":"application/json"},body:b?JSON.stringify(b):undefined});return r.json()}
+const fd=t=>t?new Date(t).toLocaleDateString("vi-VN"):"-";
+async function load(){try{localStorage.setItem("bnba",$("u").value)}catch(e){}
+ const j=await call("/admin/users");if(!j.users){$("m").textContent=j.error||"Lỗi";return}$("m").textContent=j.users.length+" người";
+ $("t").innerHTML="<tr><th>SĐT</th><th>Đăng ký</th><th>Hạn</th><th>Gói</th><th></th></tr>"+j.users.map(u=>`<tr><td>${u.phone}</td><td>${fd(u.created)}</td><td>${fd(u.until)} (${u.daysLeft} ngày)</td><td>${u.paid?"Trả phí":u.active?"Dùng thử":"Hết hạn"}</td><td><button data-e="${u.phone}">+30 ngày</button><button data-r="${u.phone}">Đặt MK</button><button class="x" data-d="${u.phone}">Xoá</button></td></tr>`).join("")}
+$("go").onclick=load;
+$("t").onclick=async e=>{const b=e.target,p=b.dataset.e||b.dataset.r||b.dataset.d;if(!p)return;
+ if(b.dataset.e)await call("/admin/extend",{phone:p,days:30});
+ else if(b.dataset.r){const w=prompt("Mật khẩu mới cho "+p);if(!w)return;await call("/admin/reset",{phone:p,password:w})}
+ else if(confirm("Xoá "+p+"?"))await call("/admin/delete",{phone:p});load()};
+</script></body></html>
