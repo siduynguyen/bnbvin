@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Báo cáo thị trường thuê căn hộ Vinhomes Grand Park · BnB Vin</title>
+<meta name="description" content="Số liệu tổng hợp nhu cầu thuê và nguồn cung căn hộ tại Vinhomes Grand Park, cập nhật mỗi ngày.">
+<meta name="robots" content="index,follow"><link rel="icon" href="/logo/icon-192.png">
+<style>
+:root{--bg:#F2F5F1;--card:#fff;--ink:#14251E;--ink2:#55645D;--line:#DCE3DD;--park:#1E6A4E;--soft:#E1EFE7;--sun:#C8891A}
+@media(prefers-color-scheme:dark){:root{--bg:#0F1915;--card:#16231D;--ink:#E6EEE9;--ink2:#9FB0A7;--line:#27372F;--park:#5CC497;--soft:#1C3329;--sun:#E7B04D}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "Be Vietnam Pro",system-ui,sans-serif}
+.w{max-width:760px;margin:0 auto;padding:16px}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}header a{color:var(--park);font-weight:600;text-decoration:none}
+h1{font-size:22px;margin:8px 0 4px}h2{font-size:17px;margin:0 0 10px}.sub{color:var(--ink2);font-size:13px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0}
+.kp{display:flex;gap:10px}.kp>div{flex:1;background:var(--soft);border-radius:12px;padding:12px}.kp b{display:block;font-size:28px;color:var(--park);line-height:1.1}.kp span{font-size:12px;color:var(--ink2)}
+.bars{display:flex;align-items:flex-end;gap:6px;height:110px;margin-top:10px}.bars div{flex:1;text-align:center;font-size:11px;color:var(--ink2)}.bars i{display:block;background:var(--park);border-radius:4px 4px 0 0;margin:0 auto 3px;width:100%;min-height:2px}.bars i.o{background:var(--sun)}
+.pair{display:flex;gap:2px;align-items:flex-end}
+table{width:100%;border-collapse:collapse;font-size:14px}td,th{padding:6px 4px;border-bottom:1px solid var(--line);text-align:right}td:first-child,th:first-child{text-align:left}th{font-size:12px;color:var(--ink2);font-weight:600}
+.lock{text-align:center}.lock input{padding:10px 12px;border:1px solid var(--line);border-radius:10px;font-size:15px;width:100%;max-width:280px;background:var(--bg);color:var(--ink)}
+.btn{display:inline-block;background:var(--park);color:#fff;border:0;border-radius:10px;padding:10px 18px;font-weight:600;font-size:15px;text-decoration:none;cursor:pointer;margin:6px 4px}.btn.ghost{background:transparent;color:var(--park);border:1px solid var(--park)}
+.err{color:#c0392b;font-size:13px;min-height:18px}.note{font-size:12px;color:var(--ink2)}
+.leg{font-size:12px;color:var(--ink2);margin-top:6px}.leg b{display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--park);margin:0 4px 0 8px}.leg b.o{background:var(--sun)}
+.zb{display:inline-block;height:8px;background:var(--park);border-radius:4px;vertical-align:middle}
+</style></head><body><div class="w">
+<header><a href="/">← bnbvin.com</a><span class="sub" id="upd"></span></header>
+<h1>Báo cáo thị trường thuê căn hộ Vinhomes Grand Park</h1>
+<div class="sub">Số liệu tổng hợp từ các nhóm môi giới & kênh đặt phòng. Không có tên hay số điện thoại cá nhân.</div>
+
+<div class="card"><h2>Hôm qua (<span id="fday"></span>)</h2>
+<div class="kp"><div><b id="fn">–</b><span>khách đang tìm thuê</span></div><div><b id="fo">–</b><span>căn chủ nhà chào cho thuê</span></div></div>
+<div class="bars" id="ftr"></div>
+<div class="leg"><b></b>Khách tìm thuê<b class="o"></b>Căn chào thuê · 7 ngày gần nhất</div></div>
+
+<div class="card"><h2>Airbnb tại Vinhomes Grand Park</h2>
+<div class="kp"><div><b id="at">–</b><span>listing Airbnb đang có</span></div><div><b id="al">–</b><span>lượt khách ở (review) căn 2PN trong tháng 10</span></div></div>
+<div class="note" style="margin-top:8px">Số liệu thu thập ngày <span id="asnap"></span>. Xem chi tiết theo loại căn và theo tháng ở bản đầy đủ.</div></div>
+
+<div class="card lock" id="lock"><h2>🔒 Bản đầy đủ · 99.000đ/tháng</h2>
+<div class="sub" style="text-align:left;margin-bottom:10px">Gồm: số khách & căn chào thuê 14 ngày chia 2PN/3PN, khách thuê ngắn/dài hạn, khu vực được hỏi nhiều nhất, và thị trường Airbnb theo từng loại căn, từng tháng.</div>
+<input id="pw" type="password" placeholder="Nhập mật khẩu thành viên" autocomplete="off"><br>
+<button class="btn" id="go">Mở khóa</button><a class="btn ghost" href="/dang-ky.html">Đăng ký</a>
+<div class="err" id="err"></div></div>
+<div id="paid" hidden></div>
+
+<p class="note">Số liệu mang tính tham khảo, được tổng hợp tự động và có thể sai lệch; không phải tư vấn đầu tư hay cam kết giá. Xem <a href="/dang-ky.html#dieukhoan">điều khoản</a>.</p>
+</div>
+<script>
+const FREE=/*FREE*/null, PAID=/*PAID*/null;
+const $=id=>document.getElementById(id), fd=s=>s.slice(8)+"/"+s.slice(5,7);
+$("upd").textContent="Cập nhật "+FREE.updated.replace("T"," ");
+$("fday").textContent=fd(FREE.day);$("fn").textContent=FREE.n;$("fo").textContent=FREE.o;
+$("at").textContent=FREE.ab.total.toLocaleString("vi");$("al").textContent=FREE.ab.last;$("asnap").textContent=fd(FREE.ab.snap)+"/"+FREE.ab.snap.slice(0,4);
+function bars(a,h){const mx=Math.max(1,...a.map(x=>Math.max(x.n,x.o)));return a.map(x=>`<div><div class="pair" style="height:${h}px"><i style="height:${x.n/mx*h}px"></i><i class="o" style="height:${x.o/mx*h}px"></i></div>${fd(x.d)}</div>`).join("")}
+$("ftr").innerHTML=bars(FREE.trend,85).replace(/class="pair"/g,'class="pair"');
+$("ftr").style.height="auto";
+const b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+async function dec(pw){const k0=await crypto.subtle.importKey("raw",new TextEncoder().encode(pw),"PBKDF2",false,["deriveKey"]);
+ const k=await crypto.subtle.deriveKey({name:"PBKDF2",salt:b64(PAID.s),iterations:200000,hash:"SHA-256"},k0,{name:"AES-GCM",length:256},false,["decrypt"]);
+ return JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({name:"AES-GCM",iv:b64(PAID.i)},k,b64(PAID.c))))}
+function zt(z,title){const r=Object.entries(z).filter(e=>e[0]!=="?").sort((a,b)=>b[1][0]-a[1][0]);const mx=Math.max(1,...r.map(e=>e[1][0]));
+ return `<h2>${title}</h2><table><tr><th>Khu / tòa</th><th>Khách hỏi</th><th></th><th>Căn chào</th></tr>${r.map(([k,v])=>`<tr><td>${k}</td><td>${v[0]}</td><td style="width:90px;text-align:left"><span class="zb" style="width:${v[0]/mx*80}px"></span></td><td>${v[1]}</td></tr>`).join("")}</table><div class="note">Chưa rõ khu: ${(z["?"]||[0,0])[0]} khách.</div>`}
+function render(P){const D=P.days,A=P.ab,pad=n=>n;
+ const tb=D.slice().reverse().map(d=>`<tr><td>${fd(d.d)}</td><td>${d.n}</td><td>${d.n2}</td><td>${d.n3}</td><td>${d.S}</td><td>${d.M}</td><td>${d.o}</td></tr>`).join("");
+ const mo=A.months.map(m=>m.slice(5)+"/"+m.slice(2,4));
+ const ab=A.groups.map(g=>`<tr><td>${g.label}</td><td>${g.n}</td>${g.m.slice(-6).map(v=>`<td>${v}</td>`).join("")}</tr>`).join("");
+ const w=D.slice(-7),sum=k=>w.reduce((a,x)=>a+x[k],0);
+ $("paid").innerHTML=`<div class="card"><h2>Tổng quan 7 ngày</h2><div class="kp"><div><b>${sum("n")}</b><span>khách tìm thuê (2PN ${sum("n2")} · 3PN ${sum("n3")})</span></div><div><b>${sum("o")}</b><span>căn chào thuê (2PN ${sum("o2")} · 3PN ${sum("o3")})</span></div><div><b>${sum("M")}</b><span>khách thuê dài (≥1 tháng)</span></div></div></div>
+ <div class="card"><h2>14 ngày gần nhất</h2><div class="bars" style="height:auto">${bars(D.map(d=>({d:d.d,n:d.n,o:d.o})),90)}</div>
+ <table style="margin-top:12px"><tr><th>Ngày</th><th>Khách</th><th>2PN</th><th>3PN</th><th>Ngắn</th><th>Dài</th><th>Căn chào</th></tr>${tb}</table></div>
+ <div class="card">${zt(P.z7,"Khu vực được hỏi nhiều · 7 ngày")}</div>
+ <div class="card">${zt(P.z14,"Khu vực được hỏi nhiều · 14 ngày")}</div>
+ <div class="card"><h2>Airbnb VGP · số lượt khách ở theo tháng</h2><div class="sub">Ước tính theo số review mỗi tháng, theo loại căn (tổng ${A.total.toLocaleString("vi")} listing). Đây là chỉ số hoạt động tương đối, không phải tỉ lệ lấp đầy chính xác.</div>
+ <table style="margin-top:8px"><tr><th>Loại</th><th>Số listing</th>${mo.slice(-6).map(m=>`<th>${m}</th>`).join("")}</tr>${ab}</table>
+ <div class="note" style="margin-top:8px">Số listing có khách trong 6 tháng gần nhất: ${A.groups.map(g=>g.label+" "+g.act6).join(" · ")}.</div></div>`;
+ $("paid").hidden=false;$("lock").hidden=true}
+async function open(pw,silent){try{render(await dec(pw));try{localStorage.setItem("bnbrp",pw)}catch(e){}}catch(e){if(!silent)$("err").textContent="Mật khẩu chưa đúng.";try{localStorage.removeItem("bnbrp")}catch(e){}}}
+$("go").onclick=()=>open($("pw").value.trim());$("pw").onkeydown=e=>{if(e.key==="Enter")$("go").click()};
+try{const s=localStorage.getItem("bnbrp");if(s)open(s,true)}catch(e){}
+</script></body></html>
