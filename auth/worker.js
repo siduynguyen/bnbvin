@@ -32,7 +32,7 @@ async function hmac(env, msg) {
 // id tài khoản: "0912345678" (SĐT) hoặc "g:email" (Google)
 const kvKey = (id) => (id.startsWith("g:") ? id : "u:" + id);
 async function makeToken(env, id) {
-  const exp = Date.now() + 60 * DAY, p = b64u(enc.encode(id));
+  const exp = Date.now() + 180 * DAY, p = b64u(enc.encode(id));
   return `${p}.${exp}.${await hmac(env, p + "." + exp)}`;
 }
 async function authUser(req, env) {
@@ -141,7 +141,7 @@ export default {
         if (!a) return json(req, { error: "Hết phiên đăng nhập." }, 401);
         const s = status(a.u);
         if (!s.active) return json(req, { error: "Đã hết hạn dùng thử. Vui lòng gia hạn.", ...s }, 402);
-        return json(req, { key: env.REPORT_KEY, ...s });
+        return json(req, { key: env.REPORT_KEY, token: await makeToken(env, a.phone), ...s }); // gia hạn phiên mỗi lần mở trang
       }
 
       if (path.startsWith("/admin/")) {

@@ -93,7 +93,7 @@ async function unlock(tok,phone){
   if(r.s===402){$("lock").hidden=true;$("exp").hidden=false;$("acctTxt").textContent=phone;$("acct").hidden=false;return false}
   if(!r.j.key)return false;
   try{render(await dec(r.j.key))}catch(e){$("err").textContent="Không mở được dữ liệu, thử lại sau.";return false}
-  show(r.j,phone);return true}
+  if(r.j.token)LS.set("bnbtok",r.j.token);show(r.j,phone);return true}
 $("go").onclick=async()=>{
   if(!AUTH_URL){$("err").textContent="Tính năng đăng nhập đang được chuẩn bị, vui lòng quay lại sau.";return}
   $("err").textContent="";$("go").disabled=true;
